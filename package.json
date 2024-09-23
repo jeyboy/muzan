@@ -5,9 +5,13 @@
   "version": "0.0.1",
   "author": "JB",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
+    "start": "cross-env NODE_ENV=production node build-server/index.js",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "npm run build:client && npm run build:server",
+
+    "adev": "astro dev",
+    "astart": "astro dev",
+    "abuild": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
