@@ -1,4 +1,4 @@
-import Express, { Application } from 'express'
+import Express, { type Application } from 'express'
 import Routes from './routes'
 import { PORT } from './utils/config'
 import Cors from './utils/cors'

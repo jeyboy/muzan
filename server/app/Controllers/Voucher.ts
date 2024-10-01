@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import Controller from './Controller'
 
 class VoucherController extends Controller {
@@ -19,7 +19,7 @@ class VoucherController extends Controller {
         message: `OK`,
         payload
       })
-    } catch (err) {
+    } catch (err: any) {
       this.handleError(req, res, err)
     }
   }
@@ -30,7 +30,7 @@ class VoucherController extends Controller {
         code: 201,
         message: `Created`
       })
-    } catch (err) {
+    } catch (err: any) {
       this.handleError(req, res, err)
     }
   }
@@ -39,7 +39,7 @@ class VoucherController extends Controller {
     try {
       // make sure throwing error with Http helper works
       this.setError(400, 'Bad Request')
-    } catch (err) {
+    } catch (err: any) {
       this.handleError(req, res, err)
     }
   }

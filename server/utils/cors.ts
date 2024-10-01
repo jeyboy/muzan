@@ -1,7 +1,9 @@
-import Cors, { CorsOptions } from 'cors'
+import Cors, { type CorsOptions } from 'cors'
 import { IS_PRODUCTION } from './config'
 
-const productionWhiteList: string[] = []
+const productionWhiteList: string[] = [
+
+]
 
 const developmentWhiteList: string[] = [
   'http://localhost',
@@ -15,7 +17,7 @@ export const whiteListDomain = IS_PRODUCTION
   : developmentWhiteList
 
 export const corsOptions: CorsOptions = {
-  origin: (origin?, callback?) => {
+  origin: (origin, callback) => {
     if (!origin || whiteListDomain.indexOf(origin) !== -1) {
       callback(null, true)
     } else {

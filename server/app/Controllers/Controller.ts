@@ -1,5 +1,5 @@
-import { Request, Response } from 'express'
-import Http, { HttpResponse } from '../Helpers/Http'
+import type { Request, Response } from 'express'
+import Http, { type HttpResponse } from '../Helpers/Http'
 import HttpError from '../Helpers/HttpError'
 
 export default class Controller {

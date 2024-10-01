@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 
 export default class HttpError extends Error {
   constructor(code: number, message: string) {
