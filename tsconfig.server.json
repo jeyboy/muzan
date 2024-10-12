@@ -1,14 +1,12 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "moduleResolution": "Node",
     "module": "commonjs",
     "outDir": "build-server",
     "downlevelIteration": true,
-    "noEmit": false
+    "noEmit": true,
+    "verbatimModuleSyntax": false
   },
-  "include": ["server"],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node",
-  }
+  "include": ["server"]
 }
