@@ -15,7 +15,7 @@
     "dev:server": "nodemon",
     "dev:client": "cross-env PORT=5000 astro dev",
     "build:server": "tsc --project tsconfig.server.json",
-    "build:client": "astro build",
+    "build:client": "astro build --outDir build-client",
     "cleanup": "rm -rf build/api",
     "postbuild": "",
     "astart": "astro dev",

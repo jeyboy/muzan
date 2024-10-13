@@ -1,5 +1,5 @@
 import Express, { type Application } from 'express'
-import Routes from './routes'
+import Routes from './routes/index'
 import { PORT } from './utils/config'
 import Cors from './utils/cors'
 

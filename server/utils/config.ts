@@ -13,4 +13,4 @@ const __filename = fileURLToPath(import.meta.url); // get the resolved path to t
 const __dirname = path.dirname(__filename); // get the name of the directory
 
 export const IS_PRODUCTION = NODE_ENV === 'production'
-export const CLIENT_BUILD_PATH = `${__dirname}/../../build`
+export const CLIENT_BUILD_PATH = `${__dirname}/../../build-client`
