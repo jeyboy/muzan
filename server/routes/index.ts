@@ -9,6 +9,7 @@ class Routes extends Router {
 
   public routes() {
     this.router.use(ApiRoute.baseRoute, ApiRoute.router)
+    
     if (IS_PRODUCTION) {
       this.router.use(Express.static(CLIENT_BUILD_PATH))
       this.router.use('*', (_, res) => {
