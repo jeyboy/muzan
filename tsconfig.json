@@ -1,7 +1,7 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node",
-  }
+  "extends": "astro/tsconfigs/strict"
+  // "ts-node": {
+  //   "esm": true,
+  //   "experimentalSpecifierResolution": "node",
+  // }
 }

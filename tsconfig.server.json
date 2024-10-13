@@ -2,15 +2,24 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "moduleResolution": "Node",
-    "module": "es6",
-    "outDir": "build-server",
+    "module": "es2022",
+    "outDir": "./build-server",
     "downlevelIteration": true,
-    "noEmit": true,
+    "noEmit": false,
     "verbatimModuleSyntax": false,
-    "target": "es5", 
+    "target": "es5",
+
+    "diagnostics": true,
+    "extendedDiagnostics": true,
+    "explainFiles": false,
+    "listEmittedFiles": true,
+    "listFiles": false,
+    "traceResolution": false,
+    "disableReferencedProjectLoad": false,
+    "disableSolutionSearching": false,
+    "noErrorTruncation": true,
+    "preserveWatchOutput": false,
+    "pretty": true
   },
-  "include": ["server"],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["server"]
 }

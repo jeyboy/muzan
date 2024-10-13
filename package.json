@@ -4,6 +4,9 @@
   "type": "module",
   "version": "0.0.1",
   "author": "JB",
+  "engines": {
+    "node": "^20"
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=production node build-server/index.js",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
@@ -14,7 +17,7 @@
     "build:server": "tsc --project tsconfig.server.json",
     "build:client": "astro build",
     "cleanup": "rm -rf build/api",
-    "postbuild": "react-snap; npm run cleanup",
+    "postbuild": "",
     "astart": "astro dev",
     "preview": "astro preview",
     "astro": "astro"
