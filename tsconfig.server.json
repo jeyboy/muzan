@@ -2,11 +2,15 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "moduleResolution": "Node",
-    "module": "commonjs",
+    "module": "es6",
     "outDir": "build-server",
     "downlevelIteration": true,
     "noEmit": true,
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "target": "es5", 
   },
-  "include": ["server"]
+  "include": ["server"],
+  "exclude": [
+    "node_modules"
+  ]
 }
