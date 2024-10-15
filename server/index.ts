@@ -2,6 +2,7 @@ import Express, { type Application } from 'express'
 import Routes from './routes/index'
 import { PORT } from './utils/config'
 import Cors from './utils/cors'
+// import bodyParser from 'body-parser';
 
 export default class Server {
   private application: Application
@@ -14,6 +15,7 @@ export default class Server {
   
   private plugins() {
     this.application.use(Express.urlencoded({ extended: true }))
+    // this.application.use(bodyParser.json());
     this.application.use(Express.json())
     this.application.use(Cors())
     this.application.use(Routes)
