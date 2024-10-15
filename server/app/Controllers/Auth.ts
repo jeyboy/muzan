@@ -1,9 +1,15 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
 import { generateToken } from '../Helpers/jwtUtils'
+import { getDbEntity } from '../../db/connection'
+import type { User } from '../../db/interfaces/user'
 
 class AuthController extends Controller {
   private checkPassword = async (email: string, password: string): Promise<boolean> => {
+    const users = await getDbEntity('users');
+
+    const user = (await users.findOne<User>({email}));
+
     // (email === user.email && password === user.password)
 
     return true;
