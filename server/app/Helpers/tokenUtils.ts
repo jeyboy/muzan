@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 
 export const generateJwtToken = (payload: string | object | Buffer) => {
   const secretKey = process.env.SALT;
@@ -15,4 +16,6 @@ export const generateJwtToken = (payload: string | object | Buffer) => {
   return token;
 };
 
-export const 
+export const generatePassHash = async (password: string, saltRound: number = 10) => {
+  return await bcrypt.hash(process.env.SALT + password, saltRound);
+}
