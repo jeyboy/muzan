@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export const generateToken = (payload: string | object | Buffer) => {
+export const generateJwtToken = (payload: string | object | Buffer) => {
   const secretKey = process.env.SALT;
 
   if (!secretKey) {
@@ -14,3 +14,5 @@ export const generateToken = (payload: string | object | Buffer) => {
   const token = jwt.sign(payload, secretKey, options);
   return token;
 };
+
+export const 

@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
-import { generateToken } from '../Helpers/jwtUtils'
+import { generateJwtToken } from '../Helpers/tokenUtils'
 import { getDbEntity } from '../../db/connection'
 import type { User } from '../../db/interfaces/user'
 
@@ -21,7 +21,7 @@ class AuthController extends Controller {
     try {
       if (await this.checkPassword(email, password)) {
         // Generate JWT token
-        const token = generateToken({ id: user.id, email: user.email });
+        const token = generateJwtToken({ id: user.id, email: user.email });
     
         res.json({
           token: token,
