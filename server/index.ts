@@ -1,7 +1,8 @@
+import { PORT } from './utils/config'
 import Express, { type Application } from 'express'
 import Routes from './routes/index'
-import { PORT } from './utils/config'
 import Cors from './utils/cors'
+import {connectToDB} from "./db/connection.ts";
 // import bodyParser from 'body-parser';
 
 export default class Server {
@@ -21,8 +22,9 @@ export default class Server {
     this.application.use(Routes)
   }
   
-  public run() {
+  public async run() {
     try {
+      await connectToDB();
       this.plugins()
       this.application.listen(this.port, () => {
         console.log(`> Server running on http://localhost:${this.port}`)
@@ -35,3 +37,7 @@ export default class Server {
 }
 
 new Server().run()
+    .then(r => '')
+    .catch((error) => {
+      console.error(error);
+    });
