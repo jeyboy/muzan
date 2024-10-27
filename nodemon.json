@@ -1,5 +1,5 @@
 {
   "ext": "ts",
   "ignore": ["*.spec.ts"],
-  "exec": "TS_NODE_PROJECT='tsconfig.server.json' node --no-warnings=ExperimentalWarning --loader ts-node/esm server/index.ts"
+  "exec": "cross-env TS_NODE_PROJECT='tsconfig.server.json' node --no-warnings=ExperimentalWarning --loader ts-node/esm server/index.ts"
 }
