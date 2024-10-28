@@ -2,7 +2,7 @@ import { PORT } from './utils/config'
 import Express, { type Application } from 'express'
 import Routes from './routes/index'
 import Cors from './utils/cors'
-import {connectToDB} from "./db/connection.ts";
+import { connectToDB } from "./db/connection";
 // import bodyParser from 'body-parser';
 
 export default class Server {

@@ -2,6 +2,12 @@ import { Db, MongoClient} from "mongodb";
 
 let db: Db | undefined = undefined;
 
+export const usersCollectionName = 'users';
+export const songsCollectionName = 'songs';
+export const lyricsCollectionName = 'lyrics';
+export const audiosCollectionName = 'audios';
+export const sourcesCollectionName = 'sources';
+
 export async function connectToDB() {
     const connectionString = process.env.DB_URI || "";
     const dbName = process.env.DB_NAME || "";

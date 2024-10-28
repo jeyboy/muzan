@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
 import {generateJwtToken, generatePassHash} from '../Helpers/tokenUtils'
-import { getDbEntity } from '../../db/connection'
+import {getDbEntity, usersCollectionName} from '../../db/connection'
 import type { User } from '../../db/interfaces/user'
 
 class AuthController extends Controller {
   private checkPassword = async (email: string, password: string = ''): Promise<User | undefined> => {
-    const users = await getDbEntity('users');
+    const users = await getDbEntity(usersCollectionName);
 
     const user = (await users.findOne<User>({email}));
 
