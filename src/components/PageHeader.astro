@@ -1,6 +1,15 @@
 ---
 import Icon from "astro-icon";
 ---
+<style>
+  audio {
+    flex-grow: 10;
+  }
+
+  a {
+    flex-grow: 0;
+  }
+</style>
 
 <div
   class="relative z-10 py-4 px-6 flex justify-between"
@@ -14,24 +23,8 @@ import Icon from "astro-icon";
   >
     <Icon name="bi:chevron-left" class="h-4 w-4 -ml-0.5" />
   </a>
-  <div class="flex items-center gap-3">
-    <a
-      target="_blank"
-      href="https://vercel.com/templates/astro/view-transitions"
-      class="flex relative overflow-hidden group bg-gradient-to-br from-black/10 to-black/40 rounded-md px-2.5 h-7 text-gray-200 hover:text-white transition-colors gap-1 items-center"
-    >
-      <span class="text-xs">
-        Deploy on <span class="font-bold">Vercel</span>
-      </span>
-      <Icon name="ion:logo-vercel" class="h-4 w-4" />
-    </a>
-    <a
-      target="_blank"
-      aria-label={"github repository"}
-      href="https://github.com/igorm84/spotify-astro-transitions"
-      class="text-gray-200 hover:text-white"
-    >
-      <Icon name="mdi:github" class="h-7 w-7" />
-    </a>
-  </div>
+  <audio id="audio" controls class="ml-4">
+    <source src="https://cdn1.suno.ai/838bb039-40e9-4397-a76a-3f466435857e.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 </div>
