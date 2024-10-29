@@ -1,11 +1,8 @@
 ---
 import Icon from "astro-icon";
+import Player from "./Player.astro";
 ---
 <style>
-  audio {
-    flex-grow: 10;
-  }
-
   a {
     flex-grow: 0;
   }
@@ -23,8 +20,5 @@ import Icon from "astro-icon";
   >
     <Icon name="bi:chevron-left" class="h-4 w-4 -ml-0.5" />
   </a>
-  <audio id="audio" controls class="ml-4">
-    <source src="https://cdn1.suno.ai/838bb039-40e9-4397-a76a-3f466435857e.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <Player url="https://cdn1.suno.ai/838bb039-40e9-4397-a76a-3f466435857e.mp3" grow="10" />
 </div>

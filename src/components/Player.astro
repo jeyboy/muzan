@@ -1,9 +1,11 @@
 ---
 interface Props {
   url: string | undefined;
+  autoplay?: boolean;
+  grow?: number | undefined;
 }
 
-const { url = undefined } = Astro.props;
+const { url = undefined, autoplay = false, grow = 1 } = Astro.props;
 ---
 
 <!--<audio class="player" controls>-->
@@ -41,8 +43,8 @@ const { url = undefined } = Astro.props;
   }
 </style>
 
-<div class="audio-player">
-  <audio id="audio" controls>
+<div class="audio-player" style=`flex-grow: ${grow}`>
+  <audio id="audio" controls autoplay=`${autoplay} ? "autoplay" : ''`>
     <source src=`${url}` type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
@@ -64,37 +66,48 @@ const { url = undefined } = Astro.props;
     const currentTimeDisplay = document.getElementById("current-time");
     const totalTimeDisplay = document.getElementById("total-time");
 
-    let isPlaying = false;
+    if (audio && playPauseButton && volumeControl && progressBar && currentTimeDisplay && totalTimeDisplay) {
+      playPauseButton.addEventListener("click", () => {
+        if (audio.paused) {
+          audio.pause();
+          playPauseButton.textContent = "Play";
+        } else {
+          audio.play();
+          playPauseButton.textContent = "Pause";
+        }
+        isPlaying = !isPlaying;
+      });
 
-    playPauseButton.addEventListener("click", () => {
-      if (isPlaying) {
-        audio.pause();
-        playPauseButton.textContent = "Play";
-      } else {
-        audio.play();
-        playPauseButton.textContent = "Pause";
-      }
-      isPlaying = !isPlaying;
-    });
+      volumeControl.addEventListener("input", () => {
+        audio.volume = volumeControl.value;
+      });
 
-    volumeControl.addEventListener("input", () => {
-      audio.volume = volumeControl.value;
-    });
+      audio.addEventListener("timeupdate", () => {
+        const currentTime = audio.currentTime;
+        const duration = audio.duration;
 
-    audio.addEventListener("timeupdate", () => {
-      const currentTime = audio.currentTime;
-      const duration = audio.duration;
+        const currentMinutes = Math.floor(currentTime / 60);
+        const currentSeconds = Math.floor(currentTime % 60);
+        const totalMinutes = Math.floor(duration / 60);
+        const totalSeconds = Math.floor(duration % 60);
 
-      const currentMinutes = Math.floor(currentTime / 60);
-      const currentSeconds = Math.floor(currentTime % 60);
-      const totalMinutes = Math.floor(duration / 60);
-      const totalSeconds = Math.floor(duration % 60);
+        currentTimeDisplay.textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' : ''}${currentSeconds}`;
+        totalTimeDisplay.textContent = `${totalMinutes}:${totalSeconds < 10 ? '0' : ''}${totalSeconds}`;
 
-      currentTimeDisplay.textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' : ''}${currentSeconds}`;
-      totalTimeDisplay.textContent = `${totalMinutes}:${totalSeconds < 10 ? '0' : ''}${totalSeconds}`;
+        const progress = (currentTime / duration) * 100;
+        progressBar.style.width = `${progress}%`;
+      });
 
-      const progress = (currentTime / duration) * 100;
-      progressBar.style.width = `${progress}%`;
-    });
+      audio.addEventListener("durationchange", (event) => {
+        console.log("Not sure why, but the duration of the video has changed.");
+      });
+
+      addEventListener("ended", (event) => {
+        console.log('The track is ended');
+      });
+    } else {
+      console.log('Cant initialize the player')
+    }
+
   </script>
 </div>
