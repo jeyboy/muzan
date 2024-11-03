@@ -1,7 +1,6 @@
-import {Dropbox, DropboxResponse} from "dropbox";
+import {type async, Dropbox, DropboxResponse, type files} from "dropbox";
 import * as fs from "node:fs";
 import path from "path";
-import {files} from "dropbox/types/dropbox_types";
 
 class DropBox {
     public spaceLeft() {
@@ -9,6 +8,8 @@ class DropBox {
     }
 
     public list() {
+        // filesListFolderContinue
+
         this.ctx().filesListFolder({ path: '' })
             .then((response: any) => {
                 console.log(response);
@@ -35,9 +36,6 @@ class DropBox {
         });
     }
 
-    // filesListFolder
-    // filesListFolderContinue
-
     public uploadUrl() {
         return this.ctx().filesSaveUrl({
             path: '',
@@ -49,6 +47,19 @@ class DropBox {
             throw err;
         });
     }
+
+    public uploadUrlStatus(jobId: async.AsyncJobId) {
+        return this.ctx().filesSaveUrlCheckJobStatus({
+            async_job_id: jobId
+        }).then((data: DropboxResponse<files.SaveUrlJobStatus>) => {
+
+        })
+        .catch((err: Error) => {
+            throw err;
+        });
+    }
+
+
 
     public downloadFile(sharedLink: string) {
         this.ctx().sharingGetSharedLinkFile({ url: sharedLink })
@@ -66,9 +77,33 @@ class DropBox {
             });
     }
 
-    public createFolder() {
+    public createFolder(path: string) {
+        this.ctx().filesCreateFolderV2({ path })
+            .then((data: any) => {
 
+            })
+            .catch((err: Error) => {
+                throw err;
+            });
     }
+
+    public deleteFile(path: string) {
+       return  this.deleteFolder(path);
+    }
+
+    public deleteFolder(path: string) {
+        return this.ctx().filesDeleteV2({ path })
+            .then((data: any) => {
+
+            })
+            .catch((err: Error) => {
+                throw err;
+            });
+    }
+
+
+
+    // usersGetSpaceUsage
 
     private ctx() {
         return new Dropbox({ accessToken: process.env.DROP_KEY })
