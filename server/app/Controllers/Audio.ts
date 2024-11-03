@@ -1,8 +1,11 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
+import dropbox from "../../modules/dropbox";
 
 class AudioController extends Controller {
   public get = (req: Request, res: Response) => {
+    console.log("", dropbox.spaceLeft());
+
     // dummy data. only for demo
     const payload: any[] = [
 

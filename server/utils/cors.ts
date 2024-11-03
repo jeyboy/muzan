@@ -1,6 +1,12 @@
 import Cors, { type CorsOptions } from 'cors'
 import { IS_PRODUCTION } from './config'
 
+export const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
 const productionWhiteList: string[] = [
 
 ]

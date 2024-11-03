@@ -2,9 +2,43 @@ import {type async, Dropbox, DropboxResponse, type files} from "dropbox";
 import * as fs from "node:fs";
 import path from "path";
 
-class DropBox {
-    public spaceLeft() {
+export type spaceMetrics = {
+    used: number;
+    allocated: number;
+};
 
+// https://www.dropbox.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&token_access_type=offline
+
+// curl https://api.dropbox.com/oauth2/token \
+//     -d code=<AUTHORIZATION_CODE> \
+//     -d grant_type=authorization_code \
+//     -d redirect_uri=<REDIRECT_URI> \
+//     -u <APP_KEY>:<APP_SECRET>
+
+
+// curl https://api.dropbox.com/oauth2/token \
+//     -d grant_type=refresh_token \
+//     -d refresh_token=<YOUR_REFRESH_TOKEN> \
+//     -u <YOUR_APP_KEY>:<YOUR_APP_SECRET>
+
+// account_info.read
+// files. metadata. read
+// files. content. write
+// sharing. read
+
+class DropBox {
+    public async spaceLeft(): Promise<spaceMetrics> {
+        const res = await this.ctx().usersGetSpaceUsage();
+        let allocatedMem = 0;
+
+        if ('allocated' in res.result.allocation) {
+            allocatedMem = res.result.allocation.allocated;
+        }
+
+        return {
+            used: res.result.used,
+            allocated: allocatedMem,
+        };
     }
 
     public list() {
@@ -101,12 +135,8 @@ class DropBox {
             });
     }
 
-
-
-    // usersGetSpaceUsage
-
     private ctx() {
-        return new Dropbox({ accessToken: process.env.DROP_KEY })
+        return new Dropbox({ accessToken: process.env.DROP_KEY }) // refreshToken
     }
 }
 
