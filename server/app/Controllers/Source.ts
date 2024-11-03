@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
 
-class FolderController extends Controller {
+class SourceController extends Controller {
   public get = (req: Request, res: Response) => {
     // dummy data. only for demo
     const payload: any[] = [
@@ -39,4 +39,4 @@ class FolderController extends Controller {
   }
 }
 
-export default new FolderController()
+export default new SourceController()
