@@ -1,9 +1,14 @@
 import {type async, Dropbox, DropboxAuth, DropboxResponse, type files} from "dropbox";
 import * as fs from "node:fs";
 import path from "path";
-import type {users} from "dropbox/types/dropbox_types";
+import type {
+    users
+} from "dropbox/types/dropbox_types";
+import type FileMetadataReference = files.FileMetadataReference;
+import type FolderMetadataReference = files.FolderMetadataReference;
+import type DeletedMetadataReference = files.DeletedMetadataReference;
 
-export type spaceMetrics = {
+export type SpaceMetrics = {
     used: number;
     allocated: number;
 };
@@ -24,9 +29,7 @@ class DropBox {
         this.ctx = new Dropbox({ auth: dAuth });
     }
 
-    public async spaceLeft(): Promise<spaceMetrics> {
-        // const res = await this.makeCall<Promise<DropboxResponse<users.SpaceUsage>>>(async () => { return await this.ctx.usersGetSpaceUsage() });
-
+    public async spaceLeft(): Promise<SpaceMetrics> {
         const res = await this.ctx.usersGetSpaceUsage();
 
         let usedMem = 0;
@@ -48,16 +51,58 @@ class DropBox {
         };
     }
 
-    public list() {
-        // filesListFolderContinue
+    public async list(path: string = '') {
+        // var entries = {};
+        // let fetch_files = function(_path, entries){
+        //     await dbx.filesListFolder({path: _path})
+        //         .then(function(response) {
+        //             console.log('response', response);
+        //             entries = response.result.entries;
+        //             for (var i = 0; i < entries.length; i++) {
+        //                 if(entries[i]['.tag'] == 'folder'){
+        //                     entries[i]['subentries'] = {};
+        //                     fetch_files(entries[i]['path_display'], entries[i]['subentries']);
+        //                 }
+        //             }
+        //         })
+        //         .catch(function(error) {
+        //             console.error(error);
+        //         });
+        // };
+        // fetch_files('', entries);
+        // if(Object.keys(entries).length !== 0){
+        //     displayFiles(entries);
+        // }
 
-        this.ctx.filesListFolder({ path: '' })
-            .then((response: any) => {
-                console.log(response);
-            })
-            .catch((err: any) => {
-                console.log(err);
-            });
+
+
+        const res = {};
+        let dropData: DropboxResponse<files.ListFolderResult> | undefined;
+        let entries: Array<FileMetadataReference|FolderMetadataReference|DeletedMetadataReference>;
+
+        try {
+            do {
+                if (dropData) {
+                    dropData = await this.ctx.filesListFolderContinue({ cursor: dropData.result.cursor });
+                    entries = dropData.result.entries;
+                } else {
+                    dropData = await this.ctx.filesListFolder({ path });
+                    entries = dropData.result.entries;
+                }
+
+                entries.forEach((entry) => {
+                    if (entry[".tag"] === 'folder') {
+
+                    }
+                });
+            }
+            while (dropData.result.has_more);
+        }
+        catch(e) {
+            // TODO: do something
+        }
+
+        return res;
     }
 
     public uploadFile() {
