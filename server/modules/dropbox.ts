@@ -159,7 +159,7 @@ class DropBox {
 
     public async createFolder(path: string): Promise<boolean> {
         try {
-            const res = await this.ctx.filesCreateFolderV2({ path });
+            await this.ctx.filesCreateFolderV2({ path });
             return true;
         }
         catch(e) {
