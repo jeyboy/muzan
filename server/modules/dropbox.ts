@@ -1,6 +1,7 @@
-import {type async, Dropbox, DropboxResponse, type files} from "dropbox";
+import {type async, Dropbox, DropboxAuth, DropboxResponse, type files} from "dropbox";
 import * as fs from "node:fs";
 import path from "path";
+import type {users} from "dropbox/types/dropbox_types";
 
 export type spaceMetrics = {
     used: number;
@@ -8,16 +9,41 @@ export type spaceMetrics = {
 };
 
 class DropBox {
+    private ctx: Dropbox;
+
+    constructor() {
+        const dAuth = new DropboxAuth({
+            accessToken: process.env.DROP_TOKEN,
+            refreshToken: process.env.DROP_REFRESH_TOKEN,
+            accessTokenExpiresAt: new Date(),
+            clientId: process.env.DROP_APP_KEY,
+            clientSecret: process.env.DROP_APP_SECRET,
+        });
+
+
+        this.ctx = new Dropbox({ auth: dAuth });
+    }
+
     public async spaceLeft(): Promise<spaceMetrics> {
-        const res = await this.ctx().usersGetSpaceUsage();
+        // const res = await this.makeCall<Promise<DropboxResponse<users.SpaceUsage>>>(async () => { return await this.ctx.usersGetSpaceUsage() });
+
+        const res = await this.ctx.usersGetSpaceUsage();
+
+        let usedMem = 0;
         let allocatedMem = 0;
 
-        if ('allocated' in res.result.allocation) {
-            allocatedMem = res.result.allocation.allocated;
+        if (res) {
+            if ('allocated' in res.result.allocation) {
+                allocatedMem = res.result.allocation.allocated;
+            }
+
+            usedMem = res.result.used;
+        } else {
+            console.error("Can't made the call: spaceLeft")
         }
 
         return {
-            used: res.result.used,
+            used: usedMem,
             allocated: allocatedMem,
         };
     }
@@ -25,7 +51,7 @@ class DropBox {
     public list() {
         // filesListFolderContinue
 
-        this.ctx().filesListFolder({ path: '' })
+        this.ctx.filesListFolder({ path: '' })
             .then((response: any) => {
                 console.log(response);
             })
@@ -41,7 +67,7 @@ class DropBox {
             }
 
             // This uploads basic.js to the root of your dropbox
-            this.ctx().filesUpload({ path: '/basic.js', contents })
+            this.ctx.filesUpload({ path: '/basic.js', contents })
                 .then((response: any) => {
                     console.log(response);
                 })
@@ -52,7 +78,7 @@ class DropBox {
     }
 
     public uploadUrl() {
-        return this.ctx().filesSaveUrl({
+        return this.ctx.filesSaveUrl({
             path: '',
             url: '',
         }).then((data: DropboxResponse<files.SaveUrlResult>) => {
@@ -64,7 +90,7 @@ class DropBox {
     }
 
     public uploadUrlStatus(jobId: async.AsyncJobId) {
-        return this.ctx().filesSaveUrlCheckJobStatus({
+        return this.ctx.filesSaveUrlCheckJobStatus({
             async_job_id: jobId
         }).then((data: DropboxResponse<files.SaveUrlJobStatus>) => {
 
@@ -77,7 +103,7 @@ class DropBox {
 
 
     public downloadFile(sharedLink: string) {
-        this.ctx().sharingGetSharedLinkFile({ url: sharedLink })
+        this.ctx.sharingGetSharedLinkFile({ url: sharedLink })
             .then((data: any) => {
                 // Note: The fileBinary field is not part of the Dropbox SDK
                 // specification, so it is not included in the TypeScript type.
@@ -93,7 +119,7 @@ class DropBox {
     }
 
     public createFolder(path: string) {
-        this.ctx().filesCreateFolderV2({ path })
+        this.ctx.filesCreateFolderV2({ path })
             .then((data: any) => {
 
             })
@@ -107,7 +133,7 @@ class DropBox {
     }
 
     public deleteFolder(path: string) {
-        return this.ctx().filesDeleteV2({ path })
+        return this.ctx.filesDeleteV2({ path })
             .then((data: any) => {
 
             })
@@ -116,9 +142,9 @@ class DropBox {
             });
     }
 
-    private ctx() {
-        return new Dropbox({ accessToken: process.env.DROP_TOKEN, refreshToken: process.env.DROP_REFRESH_TOKEN })
-    }
+    // private ctx() {
+    //     return new Dropbox({ accessToken: process.env.DROP_TOKEN, refreshToken: process.env.DROP_REFRESH_TOKEN })
+    // }
 }
 
 export default new DropBox();
