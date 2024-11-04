@@ -3,13 +3,11 @@ import Controller from './Controller'
 import dropbox from "../../modules/dropbox";
 
 class AudioController extends Controller {
-  public get = (req: Request, res: Response) => {
-    console.log("", dropbox.spaceLeft());
+  public get = async (req: Request, res: Response) => {
+    console.log("", (await dropbox.spaceLeft()));
 
     // dummy data. only for demo
-    const payload: any[] = [
-
-    ]
+    const payload: any[] = []
 
     try {
       this.send(res, {
