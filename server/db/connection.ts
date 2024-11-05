@@ -1,4 +1,4 @@
-import { Db, MongoClient} from "mongodb";
+import {Db, type Document, MongoClient} from "mongodb";
 
 let db: Db | undefined = undefined;
 
@@ -23,10 +23,9 @@ export async function connectToDB() {
     }
 }
 
-export const getDbEntity = async (collectionName: string) => {
+export async function getDbEntity<T extends Document>(collectionName: string){
     if (!db) {
         throw new Error('The db is not initiated');
     }
-
-    return db.collection(collectionName);
-}
+    return db.collection<T>(collectionName);
+};

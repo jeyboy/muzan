@@ -29,7 +29,7 @@ class AuthController extends Controller {
 
       if (user) {
         // Generate JWT token
-        const token = generateJwtToken({ id: user.id, email: user.email });
+        const token = generateJwtToken({ id: user._id, email: user.email });
     
         res.json({
           token: token,

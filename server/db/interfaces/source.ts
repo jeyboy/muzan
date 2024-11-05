@@ -1,5 +1,11 @@
-export class Source {
-    public id: string | undefined;
+import { type Document } from "mongodb";
+
+export const ServiceNames = {
+    suno: 'suno',
+}
+
+export class Source implements Document {
+    public _id: string | undefined;
     public serviceName: string | undefined;
     public email: string | undefined;
     public key: string | undefined;
