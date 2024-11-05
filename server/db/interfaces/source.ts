@@ -4,4 +4,5 @@ export class Source {
     public email: string | undefined;
     public key: string | undefined;
     public secret: string | undefined;
+    public cookies: string | undefined;
 }
