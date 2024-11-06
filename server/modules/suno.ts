@@ -4,6 +4,8 @@ import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
 import { sleep } from "../utils/utils.ts";
 
+// https://github.com/gcui-art/suno-api?tab=readme-ov-file
+
 export const DEFAULT_MODEL = 'chirp-v3-5';
 
 export interface AudioInfo {
@@ -326,21 +328,27 @@ class SunoApi {
      */
     public async generateLyrics(prompt: string): Promise<string> {
         await this.keepAlive(false);
+
+        let attempts = 100;
+        const url = `${SunoApi.BASE_URL}/api/generate/lyrics/`;
+
         // Initiate lyrics generation
         const generateResponse = await this.client.post(
-            `${SunoApi.BASE_URL}/api/generate/lyrics/`,
+            url,
             { prompt }
         );
         const generateId = generateResponse.data.id;
 
         // Poll for lyrics completion
         let lyricsResponse = await this.client.get(
-            `${SunoApi.BASE_URL}/api/generate/lyrics/${generateId}`
+            `${url}${generateId}`
         );
-        while (lyricsResponse?.data?.status !== 'complete') {
+
+
+        while (lyricsResponse?.data?.status !== 'complete' && (attempts -= 1) > 0) {
             await sleep(2); // Wait for 2 seconds before polling again
             lyricsResponse = await this.client.get(
-                `${SunoApi.BASE_URL}/api/generate/lyrics/${generateId}`
+                `${url}${generateId}`
             );
         }
 
