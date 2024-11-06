@@ -1,5 +1,7 @@
 import { type Document } from "mongodb";
 
+export const sourcesCollectionName = 'sources';
+
 export class Source implements Document {
     public _id: string | undefined;
     public serviceId: string | undefined;

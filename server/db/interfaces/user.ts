@@ -1,5 +1,7 @@
 import { type Document } from "mongodb";
 
+export const usersCollectionName = 'users';
+
 export class User implements Document {
     public _id: string | undefined;
     public firstName: string | undefined;

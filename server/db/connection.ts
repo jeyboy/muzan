@@ -1,12 +1,12 @@
 import {Db, type Document, MongoClient} from "mongodb";
+import {type Source, sourcesCollectionName} from "./interfaces/source.ts";
+import {type User, usersCollectionName} from "./interfaces/user.ts";
+import {type Service, servicesCollectionName} from "./interfaces/service.ts";
+import {type Song, songsCollectionName} from "./interfaces/song.ts";
+import {type Lyric, lyricsCollectionName} from "./interfaces/lyric.ts";
+import {type Audio, audiosCollectionName} from "./interfaces/audio.ts";
 
 let db: Db | undefined = undefined;
-
-export const usersCollectionName = 'users';
-export const songsCollectionName = 'songs';
-export const lyricsCollectionName = 'lyrics';
-export const audiosCollectionName = 'audios';
-export const sourcesCollectionName = 'sources';
 
 export async function connectToDB() {
     const connectionString = process.env.DB_URI || "";
@@ -28,4 +28,14 @@ export async function getDbEntity<T extends Document>(collectionName: string){
         throw new Error('The db is not initiated');
     }
     return db.collection<T>(collectionName);
-};
+}
+
+export const Sources = await getDbEntity<Source>(sourcesCollectionName);
+export const Users = await getDbEntity<User>(usersCollectionName);
+export const Services = await getDbEntity<Service>(servicesCollectionName);
+
+export const Songs = await getDbEntity<Song>(songsCollectionName);
+export const Lyrics = await getDbEntity<Lyric>(lyricsCollectionName);
+export const Audios = await getDbEntity<Audio>(audiosCollectionName);
+
+

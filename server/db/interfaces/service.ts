@@ -1,5 +1,7 @@
 import { type Document } from "mongodb";
 
+export const servicesCollectionName = 'services';
+
 export class ServicePreset {
     public name: string;
     public identifier: string;

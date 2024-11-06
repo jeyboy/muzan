@@ -1,5 +1,7 @@
 import { type Document } from "mongodb";
 
+export const audiosCollectionName = 'audios';
+
 export class Audio implements Document {
     public _id: string | undefined;
     public innerId: string | undefined;
