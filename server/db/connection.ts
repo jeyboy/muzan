@@ -5,6 +5,7 @@ import {type Service, servicesCollectionName} from "./interfaces/service.ts";
 import {type Song, songsCollectionName} from "./interfaces/song.ts";
 import {type Lyric, lyricsCollectionName} from "./interfaces/lyric.ts";
 import {type Audio, audiosCollectionName} from "./interfaces/audio.ts";
+import {type Playlist, playlistsCollectionName} from "./interfaces/playlist.ts";
 
 let db: Db | undefined = undefined;
 
@@ -37,5 +38,6 @@ export const Services = await getDbEntity<Service>(servicesCollectionName);
 export const Songs = await getDbEntity<Song>(songsCollectionName);
 export const Lyrics = await getDbEntity<Lyric>(lyricsCollectionName);
 export const Audios = await getDbEntity<Audio>(audiosCollectionName);
+export const Playlists = await getDbEntity<Playlist>(playlistsCollectionName);
 
 

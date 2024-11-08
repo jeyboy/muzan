@@ -1,12 +1,10 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
-import {getDbEntity, sourcesCollectionName} from "../../db/connection";
+import {Sources} from "../../db/connection";
 import type { Source } from '../../db/interfaces/source';
 
 class SourceController extends Controller {
   public get = async (req: Request, res: Response) => {
-    const Sources = await getDbEntity<Source>(sourcesCollectionName);
-
     const items = Sources.find({});
 
     console.log(items)
