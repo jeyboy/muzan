@@ -1,5 +1,5 @@
 import { type Document } from "mongodb";
-import {Timeable} from "./_timeable.ts";
+import {Timeable} from "./_timeable";
 
 export const audiosCollectionName = 'audios';
 
@@ -19,7 +19,7 @@ export enum Language {
 export class Audio extends Timeable implements Document {
     public _id?: string;
     public parentInnerId?: string;
-    public innerId?: string;
+    public serviceInnerId?: string;
     public serviceUrl?: string;
     public serviceAudioUrl?: string;
     public songId: string;
@@ -38,7 +38,7 @@ export class Audio extends Timeable implements Document {
 
         this._id = data._id;
         this.parentInnerId = data.parentInnerId;
-        this.innerId = data.innerId;
+        this.serviceInnerId = data.serviceInnerId;
         this.serviceUrl = data.serviceUrl;
         this.serviceAudioUrl = data.serviceAudioUrl;
         this.songId = data.songId;

@@ -2,7 +2,7 @@ import axios, { type AxiosInstance } from 'axios';
 import UserAgent from 'user-agents';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
-import { sleep } from "../utils/utils.ts";
+import { sleep } from "../utils/utils";
 
 // https://github.com/gcui-art/suno-api?tab=readme-ov-file
 

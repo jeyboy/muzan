@@ -2,8 +2,8 @@ export class Timeable {
     public createdAt: number;
     public updatedAt: number;
 
-    constructor(public date: Partial<Timeable>) {
-        this.createdAt = date.createdAt || Date.now();
-        this.updatedAt = date.updatedAt || Date.now();
+    constructor(public data: Partial<Timeable>) {
+        this.createdAt = data.createdAt || Date.now();
+        this.updatedAt = data.updatedAt || Date.now();
     }
 }

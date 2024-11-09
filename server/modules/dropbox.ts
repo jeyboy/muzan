@@ -141,6 +141,10 @@ class DropBox {
         }
     }
 
+    public downloadUrl() {
+
+    }
+
     // public downloadFile(sharedLink: string) {
     //     this.ctx.sharingGetSharedLinkFile({ url: sharedLink })
     //         .then((data: any) => {

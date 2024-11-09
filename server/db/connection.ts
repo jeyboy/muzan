@@ -1,11 +1,11 @@
 import {Db, type Document, MongoClient} from "mongodb";
-import {type Source, sourcesCollectionName} from "./interfaces/source.ts";
-import {type User, usersCollectionName} from "./interfaces/user.ts";
-import {type Service, servicesCollectionName} from "./interfaces/service.ts";
-import {type Song, songsCollectionName} from "./interfaces/song.ts";
-import {type Lyric, lyricsCollectionName} from "./interfaces/lyric.ts";
-import {type Audio, audiosCollectionName} from "./interfaces/audio.ts";
-import {type Playlist, playlistsCollectionName} from "./interfaces/playlist.ts";
+import {type Source, sourcesCollectionName} from "./interfaces/source";
+import {type User, usersCollectionName} from "./interfaces/user";
+import {type Service, servicesCollectionName} from "./interfaces/service";
+import {type Song, songsCollectionName} from "./interfaces/song";
+import {type Lyric, lyricsCollectionName} from "./interfaces/lyric";
+import {type Audio, audiosCollectionName} from "./interfaces/audio";
+import {type Playlist, playlistsCollectionName} from "./interfaces/playlist";
 
 let db: Db | undefined = undefined;
 

@@ -1,5 +1,5 @@
 import { type Document } from "mongodb";
-import {Timeable} from "./_timeable.ts";
+import {Timeable} from "./_timeable";
 
 export const playlistsCollectionName = 'playlists';
 

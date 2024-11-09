@@ -1,5 +1,5 @@
 import { type Document } from "mongodb";
-import {Language} from "./audio.ts";
+import {Language} from "./audio";
 
 export const lyricsCollectionName = 'lyrics';
 

@@ -10,6 +10,7 @@ class DropboxWebhooksController extends Controller {
     const payload: any[] = []
 
     try {
+
       this.send(res, {
         code: 200,
         message: `OK`,

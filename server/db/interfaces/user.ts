@@ -1,6 +1,5 @@
 import { type Document } from "mongodb";
-import {Timeable} from "./_timeable.ts";
-import {SourceAbility} from "./source.ts";
+import {Timeable} from "./_timeable";
 
 export const usersCollectionName = 'users';
 
