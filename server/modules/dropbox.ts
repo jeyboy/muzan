@@ -1,9 +1,6 @@
-import {type async, Dropbox, DropboxAuth, DropboxResponse, type files} from "dropbox";
+import {type async, Dropbox, DropboxAuth, DropboxResponse, type files, type sharing} from "dropbox";
 import * as fs from "node:fs";
 import path from "path";
-import type {
-    users
-} from "dropbox/types/dropbox_types";
 
 export type SpaceMetrics = {
     used: number;
@@ -82,6 +79,7 @@ class DropBox {
             while (dropData.result.has_more);
         }
         catch(e) {
+            const y = 0;
             // TODO: do something
         }
 
@@ -141,8 +139,30 @@ class DropBox {
         }
     }
 
-    public downloadUrl() {
-
+    public downloadUrl(path) {
+        this.ctx.sharingCreateSharedLinkWithSettings(
+            {
+                path,
+                settings: {
+                    require_password: false,
+                    audience: sharing.LinkAudiencePublic,
+                    access: 'viewer',
+                    requested_visibility: 'public',
+                    allow_download: true
+                }
+            })
+            .then((data: any) => {
+                // Note: The fileBinary field is not part of the Dropbox SDK
+                // specification, so it is not included in the TypeScript type.
+                // It is injected by the SDK.
+                fs.writeFile(data.result.name, (<any> data).result.fileBinary, { encoding: 'binary' }, (err) => {
+                    if (err) { throw err; }
+                    console.log(`File: ${data.result.name} saved.`);
+                });
+            })
+            .catch((err: Error) => {
+                throw err;
+            });
     }
 
     // public downloadFile(sharedLink: string) {

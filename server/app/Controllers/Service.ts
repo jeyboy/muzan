@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
-import {Sources} from "../../db/connection";
+import {Services} from "../../db/connection";
 
 class ServiceController extends Controller {
   public get = async (req: Request, res: Response) => {
-    const items = Sources.find({});
+    const items = Services.find({});
 
     console.log(items)
 
