@@ -5,6 +5,7 @@ import FolderRoute from './Source'
 import UserRoute from './User'
 import AuthRoute from './Auth'
 import ServiceRoute from './Service'
+import PlaylistRoute from './Playlist'
 
 class ApiRoute extends Router {
   public baseRoute = '/api'
@@ -17,6 +18,7 @@ class ApiRoute extends Router {
     this.router.use(UserRoute.baseRoute, UserRoute.router)
     this.router.use(AuthRoute.baseRoute, AuthRoute.router)
     this.router.use(ServiceRoute.baseRoute, ServiceRoute.router)
+    this.router.use(PlaylistRoute.baseRoute, PlaylistRoute.router)
   }
 }
 

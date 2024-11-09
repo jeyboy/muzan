@@ -4,14 +4,8 @@ import {Sources} from "../../db/connection";
 import Dropbox from "../../modules/dropbox";
 
 
-class PlaylistController extends Controller {
+class GenRequestController extends Controller {
   public get = async (req: Request, res: Response) => {
-    const items = await Dropbox.list();
-
-    // const items = Sources.find({});
-
-    console.log(items)
-
     const payload: any[] = [
 
     ]
@@ -39,4 +33,4 @@ class PlaylistController extends Controller {
   }
 }
 
-export default new PlaylistController()
+export default new GenRequestController()
