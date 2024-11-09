@@ -8,6 +8,7 @@ import {type Audio, audiosCollectionName} from "./interfaces/audio";
 import {type Playlist, playlistsCollectionName} from "./interfaces/playlist";
 
 let db: Db | undefined = undefined;
+let dbConnection = undefined;
 
 export async function connectToDB() {
     const connectionString = process.env.DB_URI || "";
@@ -15,8 +16,8 @@ export async function connectToDB() {
     const client = new MongoClient(connectionString);
 
     try {
-        const conn = await client.connect();
-        db = conn.db(dbName);
+        dbConnection = await client.connect();
+        db = dbConnection.db(dbName);
 
     } catch(e) {
         console.error(e);
@@ -26,8 +27,13 @@ export async function connectToDB() {
 
 export async function getDbEntity<T extends Document>(collectionName: string){
     if (!db) {
+        await connectToDB();
+    }
+
+    if (!db) {
         throw new Error('The db is not initiated');
     }
+
     return db.collection<T>(collectionName);
 }
 
