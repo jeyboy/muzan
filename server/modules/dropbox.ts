@@ -139,6 +139,8 @@ class DropBox {
     }
 
     public async downloadUrl(path: string) {
+        let url;
+
         try {
             const res = await this.ctx.sharingCreateSharedLinkWithSettings(
                 {
@@ -149,11 +151,24 @@ class DropBox {
                     }
                 });
 
-            return res.result.url.replace('dl=0', 'raw=1');
+           url = res.result.url;
         }
-        catch(e) {
-            console.error(e);
+        catch(e: any) {
+            if (e.status === 409) {
+                try {
+                    const res = await this.ctx.sharingListSharedLinks({path});
+                    url = res.result.links[0].url;
+                }
+                catch(e: any) {
+                    return undefined;
+                }
+            } else {
+                console.error(e);
+                return undefined;
+            }
         }
+
+        return url.replace('dl=0', 'raw=1');
     }
 
     // public downloadFile(sharedLink: string) {
