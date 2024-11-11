@@ -6,6 +6,8 @@ import {type Song, songsCollectionName} from "./interfaces/song";
 import {type Lyric, lyricsCollectionName} from "./interfaces/lyric";
 import {type Audio, audiosCollectionName} from "./interfaces/audio";
 import {type Playlist, playlistsCollectionName} from "./interfaces/playlist";
+import {audioSamplesCollectionName} from "./interfaces/audioSample.ts";
+import {genRequestCollectionName} from "./interfaces/genRequest.ts";
 
 let db: Db | undefined = undefined;
 let dbConnection = undefined;
@@ -45,5 +47,10 @@ export const Songs = await getDbEntity<Song>(songsCollectionName);
 export const Lyrics = await getDbEntity<Lyric>(lyricsCollectionName);
 export const Audios = await getDbEntity<Audio>(audiosCollectionName);
 export const Playlists = await getDbEntity<Playlist>(playlistsCollectionName);
+
+// musicStylesCollectionName
+// musicStylePresetsCollectionName
+// genRequestCollectionName
+// audioSamplesCollectionName
 
 

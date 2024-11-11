@@ -3,6 +3,13 @@ import {Timeable} from "./_timeable";
 
 export const genRequestCollectionName = 'gen_requests';
 
+export enum Status {
+    Initialized = 0,
+    Failed = 1,
+    Completed = 2,
+    InProgress = 3,
+}
+
 export interface GenRequestConfig {
     [S:string]: string;
 }
@@ -13,6 +20,7 @@ export class GenRequest extends Timeable implements Document {
     public config: GenRequestConfig = {};
     public audioId?: string;
     public lyricId?: string;
+    public status: Status = Status.Initialized;
 
     constructor(data: (Partial<GenRequest> & { _id: string, serviceId: string})) {
         super(data);

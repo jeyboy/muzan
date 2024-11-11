@@ -3,13 +3,6 @@ import {Timeable} from "./_timeable";
 
 export const audiosCollectionName = 'audios';
 
-export enum Status {
-    Initialized = 0,
-    Failed = 1,
-    Completed = 2,
-    InProgress = 3,
-}
-
 export enum Language {
     English = 0,
     Russian = 1,
@@ -29,7 +22,6 @@ export class Audio extends Timeable implements Document {
     public playedCount: number;
     public likedCount: number;
     public styles: string;
-    public status: Status;
     public isPublic: boolean;
     public isCompleted: boolean;
 
@@ -48,7 +40,6 @@ export class Audio extends Timeable implements Document {
         this.likedCount = Number(data.likedCount);
         this.playedCount = Number(data.playedCount);
         this.styles = data.styles = '';
-        this.status = data.status = Status.Initialized;
         this.isPublic = data.isPublic || true;
         this.isCompleted = data.isCompleted || false;
     }

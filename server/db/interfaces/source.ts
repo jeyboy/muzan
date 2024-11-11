@@ -20,6 +20,8 @@ export class Source extends Timeable implements Document {
     public cookies?: string;
     public abilities: Array<number>;
     public maxPresetLevel: number;
+    public quota: number;
+    public quotaUpdatedAt: number;
 
     constructor(data: (Partial<Source> & { serviceId: string, email: string })) {
         super(data);
@@ -37,6 +39,9 @@ export class Source extends Timeable implements Document {
             SourceAbility.extend,
             SourceAbility.accumulate,
         ];
+
         this.maxPresetLevel = Number(data.maxPresetLevel);
+        this.quota = Number(data.quota);
+        this.quotaUpdatedAt = Number(data.quotaUpdatedAt);
     }
 }
