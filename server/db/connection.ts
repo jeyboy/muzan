@@ -6,8 +6,10 @@ import {type Song, songsCollectionName} from "./interfaces/song";
 import {type Lyric, lyricsCollectionName} from "./interfaces/lyric";
 import {type Audio, audiosCollectionName} from "./interfaces/audio";
 import {type Playlist, playlistsCollectionName} from "./interfaces/playlist";
-import {audioSamplesCollectionName} from "./interfaces/audioSample.ts";
-import {genRequestCollectionName} from "./interfaces/genRequest.ts";
+import {type AudioSample, audioSamplesCollectionName} from "./interfaces/audioSample";
+import {type GenRequest, genRequestCollectionName} from "./interfaces/genRequest";
+import {type MusicStyle, musicStylesCollectionName} from "./interfaces/musicStyles";
+import {type MusicStylePreset, musicStylePresetsCollectionName} from "./interfaces/musicStylePresets";
 
 let db: Db | undefined = undefined;
 let dbConnection = undefined;
@@ -48,9 +50,8 @@ export const Lyrics = await getDbEntity<Lyric>(lyricsCollectionName);
 export const Audios = await getDbEntity<Audio>(audiosCollectionName);
 export const Playlists = await getDbEntity<Playlist>(playlistsCollectionName);
 
-// musicStylesCollectionName
-// musicStylePresetsCollectionName
-// genRequestCollectionName
-// audioSamplesCollectionName
+export const MusicStyles = await getDbEntity<MusicStyle>(musicStylesCollectionName);
+export const MusicStylePresets = await getDbEntity<MusicStylePreset>(musicStylePresetsCollectionName);
 
-
+export const GenRequests = await getDbEntity<GenRequest>(genRequestCollectionName);
+export const AudioSamples = await getDbEntity<AudioSample>(audioSamplesCollectionName);

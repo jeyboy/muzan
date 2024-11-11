@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
-import Dropbox from "../../modules/dropbox";
+import {dropboxApi} from "../../../build-server/modules/dropbox";
 
 
 class PlaylistController extends Controller {
   public get = async (req: Request, res: Response) => {
-    const items = await Dropbox.list();
+    const items = await dropboxApi.list();
 
     // const items = Sources.find({});
 

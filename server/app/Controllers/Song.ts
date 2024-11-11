@@ -1,8 +1,12 @@
 import type { Request, Response } from 'express'
 import Controller from './Controller'
+import {dropboxApi} from "../../modules/dropbox";
 
 class SongController extends Controller {
-  public get = (req: Request, res: Response) => {
+  public get = async (req: Request, res: Response) => {
+    const items = await dropboxApi.list();
+
+
     // dummy data. only for demo
     const payload: any[] = [
 

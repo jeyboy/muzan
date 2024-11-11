@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express'
 import Controller from '../Controller'
-import dropbox from "../../../modules/dropbox";
+import {dropboxApi} from "../../../../build-server/modules/dropbox";
 
 class DropboxWebhooksController extends Controller {
   public get = async (req: Request, res: Response) => {
-    console.log("", (await dropbox.spaceLeft()));
+    console.log("", (await dropboxApi.spaceLeft()));
 
     // dummy data. only for demo
     const payload: any[] = []

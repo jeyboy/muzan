@@ -50,9 +50,10 @@ class DropBox {
         };
     }
 
-    public async list(path: string = '', res: DropboxNode = {files: {}, folders: {}}) {
+    public async list(path: string = '') {
         let entries: Array<files.FileMetadataReference|files.FolderMetadataReference|files.DeletedMetadataReference>;
         let dropData: DropboxResponse<files.ListFolderResult> | undefined;
+        const res: DropboxNode = {files: {}, folders: {}};
 
         try {
             do {
@@ -68,7 +69,6 @@ class DropBox {
                     if (entry[".tag"] === 'folder') {
                         if (entry.path_lower) {
                             res.folders[entry.name] = {files: {}, folders: {}};
-                            await this.list(entry.path_lower, res.folders[entry.name]);
                         }
                     } else {
                         res.files[entry.name] = entry.path_lower || '';
@@ -261,4 +261,4 @@ class DropBox {
     }
 }
 
-export default new DropBox();
+export const dropboxApi = new DropBox();
