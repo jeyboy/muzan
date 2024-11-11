@@ -56,7 +56,7 @@ class DropBox {
         let entries: Array<files.FileMetadataReference|files.FolderMetadataReference|files.DeletedMetadataReference>;
         let dropData: DropboxResponse<files.ListFolderResult> | undefined;
         const res: DropboxNode = {files: {}, folders: {}};
-        const cache: {[S:string]: DropboxNode} = {};
+        const cache: {[S:string]: DropboxNode} = {'/': res};
 
         try {
             do {
@@ -73,7 +73,7 @@ class DropBox {
                         const path = entry.path_lower.slice(0, - entry.name.length);
 
                         if (entry[".tag"] === 'folder') {
-                            cache[entry.path_lower] = cache[path].folders[path] = {files: {}, folders: {}};
+                            cache[entry.path_lower + DELIMITER] = cache[path].folders[entry.path_lower + DELIMITER] = {files: {}, folders: {}};
                         } else {
                             cache[path].files[entry.name] = entry.path_lower;
                         }
@@ -89,57 +89,57 @@ class DropBox {
         return res;
     }
 
-    // public async list(path: string = '', res: DropboxNode = {files: {}, folders: {}}) {
-    //     let dropData: DropboxResponse<files.ListFolderResult> | undefined;
-    //     let entries: Array<files.FileMetadataReference|files.FolderMetadataReference|files.DeletedMetadataReference> = [];
-    //
-    //     try {
-    //         do {
-    //             let status = false;
-    //             let retryAmount = 10;
-    //             do {
-    //                 try {
-    //                     if (dropData) {
-    //                         dropData = await this.ctx.filesListFolderContinue({cursor: dropData.result.cursor});
-    //                         entries = dropData.result.entries;
-    //                     } else {
-    //                         dropData = await this.ctx.filesListFolder({path});
-    //                         entries = dropData.result.entries;
-    //                     }
-    //
-    //                     status = true;
-    //                 }
-    //                 catch(e: any) {
-    //                     retryAmount -= 1;
-    //
-    //                     if (retryAmount === 0) {
-    //                         console.error("Can't parse list of entities", e.message);
-    //                         return res;
-    //                     }
-    //                 }
-    //             }
-    //             while (!status)
-    //
-    //             for (const entry of entries) {
-    //                 if (entry[".tag"] === 'folder') {
-    //                     if (entry.path_lower) {
-    //                         res.folders[entry.name] = {files: {}, folders: {}};
-    //                         await this.list(entry.path_lower, res.folders[entry.name]);
-    //                     }
-    //                 } else {
-    //                     res.files[entry.name] = entry.path_lower || '';
-    //                 }
-    //             }
-    //         }
-    //         while (dropData && dropData.result.has_more);
-    //     }
-    //     catch(e) {
-    //         const y = 0;
-    //         // TODO: do something
-    //     }
-    //
-    //     return res;
-    // }
+    public async list2(path: string = '', res: DropboxNode = {files: {}, folders: {}}) {
+        let dropData: DropboxResponse<files.ListFolderResult> | undefined;
+        let entries: Array<files.FileMetadataReference|files.FolderMetadataReference|files.DeletedMetadataReference> = [];
+
+        try {
+            do {
+                let status = false;
+                let retryAmount = 10;
+                do {
+                    try {
+                        if (dropData) {
+                            dropData = await this.ctx.filesListFolderContinue({cursor: dropData.result.cursor});
+                            entries = dropData.result.entries;
+                        } else {
+                            dropData = await this.ctx.filesListFolder({path});
+                            entries = dropData.result.entries;
+                        }
+
+                        status = true;
+                    }
+                    catch(e: any) {
+                        retryAmount -= 1;
+
+                        if (retryAmount === 0) {
+                            console.error("Can't parse list of entities", e.message);
+                            return res;
+                        }
+                    }
+                }
+                while (!status)
+
+                for (const entry of entries) {
+                    if (entry[".tag"] === 'folder') {
+                        if (entry.path_lower) {
+                            res.folders[entry.name] = {files: {}, folders: {}};
+                            await this.list2(entry.path_lower, res.folders[entry.name]);
+                        }
+                    } else {
+                        res.files[entry.name] = entry.path_lower || '';
+                    }
+                }
+            }
+            while (dropData && dropData.result.has_more);
+        }
+        catch(e) {
+            const y = 0;
+            // TODO: do something
+        }
+
+        return res;
+    }
 
     // public uploadFile() {
     //     fs.readFile(path.join(__dirname, '/basic.js'), 'utf8', (err, contents) => {

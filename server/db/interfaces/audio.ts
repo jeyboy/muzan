@@ -3,6 +3,8 @@ import {Timeable} from "./_timeable";
 
 export const audiosCollectionName = 'audios';
 
+
+
 export enum Language {
     English = 0,
     Russian = 1,
@@ -15,6 +17,7 @@ export class Audio extends Timeable implements Document {
     public serviceInnerId?: string;
     public serviceUrl?: string;
     public serviceAudioUrl?: string;
+    public coverImageUrl?: string;
     public songId: string;
     public sourceId: string;
     public name: string;
@@ -33,6 +36,7 @@ export class Audio extends Timeable implements Document {
         this.serviceInnerId = data.serviceInnerId;
         this.serviceUrl = data.serviceUrl;
         this.serviceAudioUrl = data.serviceAudioUrl;
+        this.coverImageUrl = data.coverImageUrl;
         this.songId = data.songId;
         this.sourceId = data.sourceId;
         this.name = data.name;
