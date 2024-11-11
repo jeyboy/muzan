@@ -11,7 +11,9 @@ export type DropboxNode = {
     folders: { [U: string]: DropboxNode };
 };
 
-export const concatPathParts = ([...args]) => args.join('/');
+const DELIMITER = '/';
+
+export const concatPathParts = ([...args]) => args.join(DELIMITER);
 
 class DropBox {
     private ctx: Dropbox;
@@ -54,6 +56,7 @@ class DropBox {
         let entries: Array<files.FileMetadataReference|files.FolderMetadataReference|files.DeletedMetadataReference>;
         let dropData: DropboxResponse<files.ListFolderResult> | undefined;
         const res: DropboxNode = {files: {}, folders: {}};
+        const cache: {[S:string]: DropboxNode} = {};
 
         try {
             do {
@@ -66,12 +69,14 @@ class DropBox {
                 entries = dropData.result.entries;
 
                 for (const entry of entries) {
-                    if (entry[".tag"] === 'folder') {
-                        if (entry.path_lower) {
-                            res.folders[entry.name] = {files: {}, folders: {}};
+                    if (entry.path_lower) {
+                        const path = entry.path_lower.slice(0, - entry.name.length);
+
+                        if (entry[".tag"] === 'folder') {
+                            cache[entry.path_lower] = cache[path].folders[path] = {files: {}, folders: {}};
+                        } else {
+                            cache[path].files[entry.name] = entry.path_lower;
                         }
-                    } else {
-                        res.files[entry.name] = entry.path_lower || '';
                     }
                 }
             }
