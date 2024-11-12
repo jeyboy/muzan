@@ -52,7 +52,7 @@ class DropBox {
         };
     }
 
-    public async list(path: string = '') {
+    public async list(path = '', inline = true) {
         let entries: Array<files.FileMetadataReference|files.FolderMetadataReference|files.DeletedMetadataReference>;
         let dropData: DropboxResponse<files.ListFolderResult> | undefined;
         const res: DropboxNode = {files: {}, folders: {}};
@@ -86,7 +86,7 @@ class DropBox {
             // TODO: do something
         }
 
-        return res;
+        return inline? cache : res;
     }
 
     public async list2(path: string = '', res: DropboxNode = {files: {}, folders: {}}) {
