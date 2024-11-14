@@ -6,6 +6,7 @@ export const songsCollectionName = 'songs';
 export class Song extends Timeable implements Document {
     public _id?: string;
     public name: string;
+    public displayName: string;
     public cloudPath?: string;
     public isPublic: boolean;
 
@@ -16,11 +17,13 @@ export class Song extends Timeable implements Document {
         this._id = data._id;
         this.cloudPath = data.cloudPath;
         this.isPublic = data.isPublic || true;
+        this.displayName = data.displayName || this.name;
     }
 }
 
 export class CreateSong extends Timeable implements Document {
     public name: string;
+    public displayName: string;
     public cloudPath?: string;
     public isPublic: boolean;
 
@@ -30,5 +33,6 @@ export class CreateSong extends Timeable implements Document {
         this.name = data.name;
         this.cloudPath = data.cloudPath;
         this.isPublic = data.isPublic || true;
+        this.displayName = data.displayName || this.name;
     }
 }
