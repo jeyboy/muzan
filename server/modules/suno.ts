@@ -125,6 +125,7 @@ class SunoApi {
      * Generate a song based on the prompt.
      * @param prompt The text prompt to generate audio from.
      * @param make_instrumental Indicates if the generated audio should be instrumental.
+     * @param model
      * @param wait_audio Indicates if the method should wait for the audio file to be fully generated before returning.
      * @returns
      */
@@ -181,11 +182,12 @@ class SunoApi {
      * @param tags Tags to categorize the generated audio.
      * @param title The title for the generated audio.
      * @param make_instrumental Indicates if the generated audio should be instrumental.
+     * @param model
      * @param wait_audio Indicates if the method should wait for the audio file to be fully generated before returning.
      * @param negative_tags Negative tags that should not be included in the generated audio.
      * @returns A promise that resolves to an array of AudioInfo objects representing the generated audios.
      */
-    public async custom_generate(
+    public async customGenerate(
         prompt: string,
         tags: string,
         title: string,
@@ -221,6 +223,7 @@ class SunoApi {
      * @param tags Optional tags to categorize the song, used only if isCustom is true.
      * @param title Optional title for the song, used only if isCustom is true.
      * @param make_instrumental Indicates if the generated song should be instrumental.
+     * @param model
      * @param wait_audio Indicates if the method should wait for the audio file to be fully generated before returning.
      * @param negative_tags Negative tags that should not be included in the generated audio.
      * @returns A promise that resolves to an array of AudioInfo objects representing the generated songs.
@@ -364,6 +367,7 @@ class SunoApi {
      * @param continueAt Extend a new clip from a song at mm:ss(e.g. 00:30). Default extends from the end of the song.
      * @param tags Style of Music.
      * @param title Title of the song.
+     * @param model
      * @returns A promise that resolves to an AudioInfo object representing the extended audio clip.
      */
     public async extendAudio(
@@ -408,6 +412,78 @@ class SunoApi {
         return lines.join('\n');
     }
 
+
+    /**
+     * Retrieves audio information for the given song IDs.
+     * @param songIds An optional array of song IDs to retrieve information for.
+     * @param page An optional page number to retrieve audio information from.
+     * @returns A promise that resolves to an array of AudioInfo objects.
+     */
+    public async getV2(
+        songIds?: string[],
+        page?: string | null
+    ): Promise<AudioInfo[]> {
+        await this.keepAlive(false);
+
+        // clips
+        // num_total_results
+
+//         curl 'https://studio-api.prod.suno.com/api/feed/v2?page=2' \
+// -X 'GET' \
+// -H 'Pragma: no-cache' \
+// -H 'Accept: */*' \
+// -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yT1o2eU1EZzhscWRKRWloMXJvemY4T3ptZG4iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJzdW5vLWFwaSIsImF6cCI6Imh0dHBzOi8vc3Vuby5jb20iLCJleHAiOjE3MzIyMjkwNzMsImZ2YSI6Wy0xLC0xXSwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9jbGVya19pZCI6InVzZXJfMmdQWmRuTHBBTFdPVng0enZKTkJ0UXptWWV5IiwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9lbWFpbCI6ImVib3lrb0BnbGVuZmxvdy5jb20iLCJodHRwczovL3N1bm8uYWkvY2xhaW1zL3Bob25lIjpudWxsLCJpYXQiOjE3MzIyMjkwMTMsImlzcyI6Imh0dHBzOi8vY2xlcmsuc3Vuby5jb20iLCJqdGkiOiI3YTg1YzExZWFmNzQwN2IyMDZlYyIsIm5iZiI6MTczMjIyOTAwMywic2lkIjoic2Vzc18ybmN4dnBwVGV4TE1xNkQ4VlBQR1RPZGlrY1QiLCJzdWIiOiJ1c2VyXzJnUFpkbkxwQUxXT1Z4NHp2Sk5CdFF6bVlleSJ9.aKuvX6_T8YTsai26ur4CN0aeMaScp-kCYrfW3vbDoSwI2rgPssP91WvFyQx9Q9lUf7SdV_uAG1mqeYhUBYv0svCf9EOhZQLJq7xCqba4CDOSJVVqIJRvt36-I3z6Vkbx-AxPPv2h8oNM9ABEiTz2eliqWzB2C1jWbBsU1-Q_uAsuq_MCbPHno5GNH_EU0-PZpFITmXjQ8HJV-8OifD6kJkqjao82CTxjwE7QQhOJmQZA51onet425ts2YAOtIE0tL3wJIQ27Uk3Er18LF15jkPW0QkxetYHCWP6vgllvqZqLRuRReDYKR13W7xg-n8zlQuzE7Gj0b5_QNcYe4J-HHQ' \
+// -H 'Sec-Fetch-Site: same-site' \
+// -H 'Accept-Language: en-GB,en;q=0.9' \
+// -H 'Cache-Control: no-cache' \
+// -H 'Sec-Fetch-Mode: cors' \
+// -H 'Accept-Encoding: gzip, deflate, br' \
+// -H 'Origin: https://suno.com' \
+// -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15' \
+// -H 'Referer: https://suno.com/' \
+// -H 'Sec-Fetch-Dest: empty' \
+// -H 'Device-Id: "f8bccf7d-72aa-4bd2-b495-bfe84c05a2d7"' \
+// -H 'Priority: u=3, i' \
+// -H 'Affiliate-Id: undefined'
+
+
+        let url = new URL(`${SunoApi.BASE_URL}/api/feed/`);
+        if (songIds) {
+            url.searchParams.append('ids', songIds.join(','));
+        }
+        if (page) {
+            url.searchParams.append('page', page);
+        }
+        console.info('Get audio status: ' + url.href);
+        const response = await this.client.get(url.href, {
+            // 3 seconds timeout
+            timeout: 3000
+        });
+
+        const audios = response.data;
+
+        return audios.map((audio: any) => ({
+            id: audio.id,
+            title: audio.title,
+            image_url: audio.image_url,
+            lyric: audio.metadata.prompt
+                ? this.parseLyrics(audio.metadata.prompt)
+                : '',
+            audio_url: audio.audio_url,
+            video_url: audio.video_url,
+            created_at: audio.created_at,
+            model_name: audio.model_name,
+            status: audio.status,
+            gpt_description_prompt: audio.metadata.gpt_description_prompt,
+            prompt: audio.metadata.prompt,
+            type: audio.metadata.type,
+            tags: audio.metadata.tags,
+            duration: audio.metadata.duration,
+            error_message: audio.metadata.error_message
+        }));
+    }
+
+
     /**
      * Retrieves audio information for the given song IDs.
      * @param songIds An optional array of song IDs to retrieve information for.
@@ -419,6 +495,7 @@ class SunoApi {
         page?: string | null
     ): Promise<AudioInfo[]> {
         await this.keepAlive(false);
+
         let url = new URL(`${SunoApi.BASE_URL}/api/feed/`);
         if (songIds) {
             url.searchParams.append('ids', songIds.join(','));
@@ -468,7 +545,70 @@ class SunoApi {
         return response.data;
     }
 
-    public async get_credits(): Promise<object> {
+    public async removeClip(clipId: string): Promise<void> {
+        await this.keepAlive(false);
+        const response = await this.client.get(
+            `${SunoApi.BASE_URL}/api/clip/${clipId}`
+        );
+        return response.data;
+
+
+//         curl 'https://studio-api.prod.suno.com/api/gen/trash/' \
+// -X 'POST' \
+// -H 'Content-Type: text/plain;charset=UTF-8' \
+// -H 'Pragma: no-cache' \
+// -H 'Accept: */*' \
+// -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yT1o2eU1EZzhscWRKRWloMXJvemY4T3ptZG4iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJzdW5vLWFwaSIsImF6cCI6Imh0dHBzOi8vc3Vuby5jb20iLCJleHAiOjE3MzIyMjg4OTYsImZ2YSI6Wy0xLC0xXSwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9jbGVya19pZCI6InVzZXJfMmdQWmRuTHBBTFdPVng0enZKTkJ0UXptWWV5IiwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9lbWFpbCI6ImVib3lrb0BnbGVuZmxvdy5jb20iLCJodHRwczovL3N1bm8uYWkvY2xhaW1zL3Bob25lIjpudWxsLCJpYXQiOjE3MzIyMjg4MzYsImlzcyI6Imh0dHBzOi8vY2xlcmsuc3Vuby5jb20iLCJqdGkiOiJkNzcyYzE4YWMxZmVmOTg3MWMzNSIsIm5iZiI6MTczMjIyODgyNiwic2lkIjoic2Vzc18ybmN4dnBwVGV4TE1xNkQ4VlBQR1RPZGlrY1QiLCJzdWIiOiJ1c2VyXzJnUFpkbkxwQUxXT1Z4NHp2Sk5CdFF6bVlleSJ9.CfIiHYI-jcUaeahRDF_WZqNwjy16vr_5J5L4ChZxSUR1d_-NX6wMfKx9vjUWH-NBxuf48CBMLzCpWZp-zmaIOJQEz5-PwN2ORchJeEowhinr2LALQS7oqV8AVkvH_eCW7EmsevzYFkbBf-R913-BJvXCAaCSA6MmfNo1fQLNfnGoyeWUymS8l81IKbEQF2tYgMLyfFDH_8GLHoLHalNvpPHEhxWBju-dlEUCwfESH59qE1iveUqmYjYw_YuQLYOkjLqPtW2qSNn40BVlDSUJjN0waQ1mi4fPAa7C1IRbX_0_dYRtSf1t0DC9c5KzzWl28oNRUFqhhHKINAidAIJCrg' \
+// -H 'Sec-Fetch-Site: same-site' \
+// -H 'Accept-Language: en-GB,en;q=0.9' \
+// -H 'Cache-Control: no-cache' \
+// -H 'Sec-Fetch-Mode: cors' \
+// -H 'Accept-Encoding: gzip, deflate, br' \
+// -H 'Origin: https://suno.com' \
+// -H 'Content-Length: 66' \
+// -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15' \
+// -H 'Referer: https://suno.com/' \
+// -H 'Sec-Fetch-Dest: empty' \
+// -H 'Priority: u=3, i' \
+// -H 'Affiliate-Id: undefined' \
+// --data-binary '{"trash":true,"clip_ids":["01648044-803c-4328-8cad-44dff47e6459"]}'
+
+        //POST https://studio-api.prod.suno.com/api/gen/trash/
+
+        // {
+        //     "ids": [
+        //     "01648044-803c-4328-8cad-44dff47e6459"
+        // ],
+        //     "is_trashed": true
+        // }
+
+
+
+
+
+//         curl 'https://studio-api.prod.suno.com/api/gen/trash/' \
+// -X 'POST' \
+// -H 'Content-Type: text/plain;charset=UTF-8' \
+// -H 'Pragma: no-cache' \
+// -H 'Accept: */*' \
+// -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yT1o2eU1EZzhscWRKRWloMXJvemY4T3ptZG4iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJzdW5vLWFwaSIsImF6cCI6Imh0dHBzOi8vc3Vuby5jb20iLCJleHAiOjE3MzIyMjkzNzgsImZ2YSI6Wy0xLC0xXSwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9jbGVya19pZCI6InVzZXJfMmdQWmRuTHBBTFdPVng0enZKTkJ0UXptWWV5IiwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9lbWFpbCI6ImVib3lrb0BnbGVuZmxvdy5jb20iLCJodHRwczovL3N1bm8uYWkvY2xhaW1zL3Bob25lIjpudWxsLCJpYXQiOjE3MzIyMjkzMTgsImlzcyI6Imh0dHBzOi8vY2xlcmsuc3Vuby5jb20iLCJqdGkiOiJmMDYxN2MyNWQ2MTE3ZjhhZDQ4ZCIsIm5iZiI6MTczMjIyOTMwOCwic2lkIjoic2Vzc18ybmN4dnBwVGV4TE1xNkQ4VlBQR1RPZGlrY1QiLCJzdWIiOiJ1c2VyXzJnUFpkbkxwQUxXT1Z4NHp2Sk5CdFF6bVlleSJ9.vUXqYSeL0D1eaLJggfTsAOAgIgI7OdCpqKnihgHACxA7CrNfADHPs031iJZtMNqnzRXxdxccAE9e538bdvlvVZXXpMISLZOxl3Lp85CU-ZhhN55k26uYRJpp_LFWLg127sVjYCs_3J5t_LPWjhYIVLFqSJdfph7ETLUNdIAKLd3eaCpcKeuYSAa0HvsFJ3Uq39E8Dtu18FdnmqMpAxyuwn6QR2yVnh38fKOMt9O7AIjtI2BqmnrDC9Lc7K48kS4GRbAdLnlbKMSSaGNfKy6EJkqs9lpZzHnv_u1B8HQ66cMWoWrzYdHCZmvlolXKzNqB0vAFiuxtjVFj86PjTQ4dYA' \
+// -H 'Sec-Fetch-Site: same-site' \
+// -H 'Accept-Language: en-GB,en;q=0.9' \
+// -H 'Cache-Control: no-cache' \
+// -H 'Sec-Fetch-Mode: cors' \
+// -H 'Accept-Encoding: gzip, deflate, br' \
+// -H 'Origin: https://suno.com' \
+// -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15' \
+// -H 'Referer: https://suno.com/' \
+// -H 'Content-Length: 67' \
+// -H 'Sec-Fetch-Dest: empty' \
+// -H 'Device-Id: "f8bccf7d-72aa-4bd2-b495-bfe84c05a2d7"' \
+// -H 'Priority: u=3, i' \
+// -H 'Affiliate-Id: undefined' \
+// --data-binary '{"trash":false,"clip_ids":["31ab3cd9-81e4-4727-b0de-0b3983938f8c"]}'
+    }
+
+    public async getCredits(): Promise<object> {
         await this.keepAlive(false);
         const response = await this.client.get(
             `${SunoApi.BASE_URL}/api/billing/info/`
@@ -482,7 +622,7 @@ class SunoApi {
     }
 }
 
-const newSunoApi = async (cookie: string) => {
+export const newSunoApi = async (cookie: string) => {
     const sunoApi = new SunoApi(cookie);
     return await sunoApi.init();
 };

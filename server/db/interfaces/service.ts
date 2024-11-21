@@ -3,6 +3,10 @@ import {Timeable} from "./_timeable";
 
 export const servicesCollectionName = 'services';
 
+export enum AvailableServices {
+    suno = 'SUNO',
+}
+
 export class ServicePreset extends Timeable {
     public name: string;
     public identifier: string;
