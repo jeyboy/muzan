@@ -6,6 +6,8 @@ import { sleep } from "../utils/utils";
 
 // https://github.com/gcui-art/suno-api?tab=readme-ov-file
 
+// https://suno.com/song/412bb5b1-e789-4a4c-9b31-9902355ab5ab
+
 export const DEFAULT_MODEL = 'chirp-v3-5';
 
 export interface AudioIndex {
@@ -512,75 +514,31 @@ class SunoApi {
         return response.data;
     }
 
-    public async removeClip(clipId: string): Promise<void> {
+    /** Delete or restore a specific audio clips.
+     * @param clipIds The IDs of the audio clips to delete or restore.
+     * @param isRestore The flag to identify the operation. Restoring clips if is true.
+     * @returns A promise that resolves to an object containing the audio clip information.
+     */
+    public async removeClip(clipIds: string[], isRestore = false): Promise<void> {
         await this.keepAlive(false);
         const response = await this.client.post(
-            `${SunoApi.BASE_URL}/api/clip/${clipId}`,
-
+            `${SunoApi.BASE_URL}/api/gen/trash/`,
+            {
+                "ids": clipIds,
+                "is_trashed": !isRestore
+            }
         );
+
         return response.data;
-
-
-//         curl 'https://studio-api.prod.suno.com/api/gen/trash/' \
-// -X 'POST' \
-// -H 'Content-Type: text/plain;charset=UTF-8' \
-// -H 'Pragma: no-cache' \
-// -H 'Accept: */*' \
-// -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yT1o2eU1EZzhscWRKRWloMXJvemY4T3ptZG4iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJzdW5vLWFwaSIsImF6cCI6Imh0dHBzOi8vc3Vuby5jb20iLCJleHAiOjE3MzIyMjg4OTYsImZ2YSI6Wy0xLC0xXSwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9jbGVya19pZCI6InVzZXJfMmdQWmRuTHBBTFdPVng0enZKTkJ0UXptWWV5IiwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9lbWFpbCI6ImVib3lrb0BnbGVuZmxvdy5jb20iLCJodHRwczovL3N1bm8uYWkvY2xhaW1zL3Bob25lIjpudWxsLCJpYXQiOjE3MzIyMjg4MzYsImlzcyI6Imh0dHBzOi8vY2xlcmsuc3Vuby5jb20iLCJqdGkiOiJkNzcyYzE4YWMxZmVmOTg3MWMzNSIsIm5iZiI6MTczMjIyODgyNiwic2lkIjoic2Vzc18ybmN4dnBwVGV4TE1xNkQ4VlBQR1RPZGlrY1QiLCJzdWIiOiJ1c2VyXzJnUFpkbkxwQUxXT1Z4NHp2Sk5CdFF6bVlleSJ9.CfIiHYI-jcUaeahRDF_WZqNwjy16vr_5J5L4ChZxSUR1d_-NX6wMfKx9vjUWH-NBxuf48CBMLzCpWZp-zmaIOJQEz5-PwN2ORchJeEowhinr2LALQS7oqV8AVkvH_eCW7EmsevzYFkbBf-R913-BJvXCAaCSA6MmfNo1fQLNfnGoyeWUymS8l81IKbEQF2tYgMLyfFDH_8GLHoLHalNvpPHEhxWBju-dlEUCwfESH59qE1iveUqmYjYw_YuQLYOkjLqPtW2qSNn40BVlDSUJjN0waQ1mi4fPAa7C1IRbX_0_dYRtSf1t0DC9c5KzzWl28oNRUFqhhHKINAidAIJCrg' \
-// -H 'Sec-Fetch-Site: same-site' \
-// -H 'Accept-Language: en-GB,en;q=0.9' \
-// -H 'Cache-Control: no-cache' \
-// -H 'Sec-Fetch-Mode: cors' \
-// -H 'Accept-Encoding: gzip, deflate, br' \
-// -H 'Origin: https://suno.com' \
-// -H 'Content-Length: 66' \
-// -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15' \
-// -H 'Referer: https://suno.com/' \
-// -H 'Sec-Fetch-Dest: empty' \
-// -H 'Priority: u=3, i' \
-// -H 'Affiliate-Id: undefined' \
-// --data-binary '{"trash":true,"clip_ids":["01648044-803c-4328-8cad-44dff47e6459"]}'
-
-        //POST https://studio-api.prod.suno.com/api/gen/trash/
-
-        // {
-        //     "ids": [
-        //     "01648044-803c-4328-8cad-44dff47e6459"
-        // ],
-        //     "is_trashed": true
-        // }
-
-
-
-
-
-//         curl 'https://studio-api.prod.suno.com/api/gen/trash/' \
-// -X 'POST' \
-// -H 'Content-Type: text/plain;charset=UTF-8' \
-// -H 'Pragma: no-cache' \
-// -H 'Accept: */*' \
-// -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yT1o2eU1EZzhscWRKRWloMXJvemY4T3ptZG4iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJzdW5vLWFwaSIsImF6cCI6Imh0dHBzOi8vc3Vuby5jb20iLCJleHAiOjE3MzIyMjkzNzgsImZ2YSI6Wy0xLC0xXSwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9jbGVya19pZCI6InVzZXJfMmdQWmRuTHBBTFdPVng0enZKTkJ0UXptWWV5IiwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9lbWFpbCI6ImVib3lrb0BnbGVuZmxvdy5jb20iLCJodHRwczovL3N1bm8uYWkvY2xhaW1zL3Bob25lIjpudWxsLCJpYXQiOjE3MzIyMjkzMTgsImlzcyI6Imh0dHBzOi8vY2xlcmsuc3Vuby5jb20iLCJqdGkiOiJmMDYxN2MyNWQ2MTE3ZjhhZDQ4ZCIsIm5iZiI6MTczMjIyOTMwOCwic2lkIjoic2Vzc18ybmN4dnBwVGV4TE1xNkQ4VlBQR1RPZGlrY1QiLCJzdWIiOiJ1c2VyXzJnUFpkbkxwQUxXT1Z4NHp2Sk5CdFF6bVlleSJ9.vUXqYSeL0D1eaLJggfTsAOAgIgI7OdCpqKnihgHACxA7CrNfADHPs031iJZtMNqnzRXxdxccAE9e538bdvlvVZXXpMISLZOxl3Lp85CU-ZhhN55k26uYRJpp_LFWLg127sVjYCs_3J5t_LPWjhYIVLFqSJdfph7ETLUNdIAKLd3eaCpcKeuYSAa0HvsFJ3Uq39E8Dtu18FdnmqMpAxyuwn6QR2yVnh38fKOMt9O7AIjtI2BqmnrDC9Lc7K48kS4GRbAdLnlbKMSSaGNfKy6EJkqs9lpZzHnv_u1B8HQ66cMWoWrzYdHCZmvlolXKzNqB0vAFiuxtjVFj86PjTQ4dYA' \
-// -H 'Sec-Fetch-Site: same-site' \
-// -H 'Accept-Language: en-GB,en;q=0.9' \
-// -H 'Cache-Control: no-cache' \
-// -H 'Sec-Fetch-Mode: cors' \
-// -H 'Accept-Encoding: gzip, deflate, br' \
-// -H 'Origin: https://suno.com' \
-// -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15' \
-// -H 'Referer: https://suno.com/' \
-// -H 'Content-Length: 67' \
-// -H 'Sec-Fetch-Dest: empty' \
-// -H 'Device-Id: "f8bccf7d-72aa-4bd2-b495-bfe84c05a2d7"' \
-// -H 'Priority: u=3, i' \
-// -H 'Affiliate-Id: undefined' \
-// --data-binary '{"trash":false,"clip_ids":["31ab3cd9-81e4-4727-b0de-0b3983938f8c"]}'
     }
 
     public async getCredits(): Promise<object> {
         await this.keepAlive(false);
+
         const response = await this.client.get(
             `${SunoApi.BASE_URL}/api/billing/info/`
         );
+
         return {
             credits_left: response.data.total_credits_left,
             period: response.data.period,
