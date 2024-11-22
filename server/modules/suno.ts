@@ -8,6 +8,11 @@ import { sleep } from "../utils/utils";
 
 export const DEFAULT_MODEL = 'chirp-v3-5';
 
+export interface AudioIndex {
+    clips: AudioInfo[];
+    total: number;
+}
+
 export interface AudioInfo {
     id: string; // Unique identifier for the audio
     title?: string; // Title of the audio
@@ -28,7 +33,7 @@ export interface AudioInfo {
 }
 
 class SunoApi {
-    private static BASE_URL: string = 'https://studio-api.suno.ai';
+    private static BASE_URL: string = 'https://studio-api.prod.suno.com';
     private static CLERK_BASE_URL: string = 'https://clerk.suno.com';
     private static JSDELIVR_BASE_URL: string = 'https://data.jsdelivr.com';
 
@@ -66,9 +71,7 @@ class SunoApi {
         return this;
     }
 
-    /**
-     * Get the clerk package latest version id.
-     */
+    /** Get the clerk package latest version id. */
     private async getClerkLatestVersion() {
         // URL to get clerk version ID
         const getClerkVersionUrl = `${SunoApi.JSDELIVR_BASE_URL}/v1/package/npm/@clerk/clerk-js`;
@@ -83,9 +86,7 @@ class SunoApi {
         this.clerkVersion = versionListResponse?.data?.['tags']['latest'];
     }
 
-    /**
-     * Get the session ID and save it for later use.
-     */
+    /** Get the session ID and save it for later use. */
     private async getAuthToken() {
         // URL to get session ID
         const getSessionUrl = `${SunoApi.CLERK_BASE_URL}/v1/client?_clerk_js_version=${this.clerkVersion}`;
@@ -100,8 +101,7 @@ class SunoApi {
         this.sid = sessionResponse.data.response['last_active_session_id'];
     }
 
-    /**
-     * Keep the session alive.
+    /** Keep the session alive.
      * @param isWait Indicates if the method should wait for the session to be fully renewed before returning.
      */
     public async keepAlive(isWait?: boolean): Promise<void> {
@@ -121,8 +121,7 @@ class SunoApi {
         this.currentToken = newToken;
     }
 
-    /**
-     * Generate a song based on the prompt.
+    /** Generate a song based on the prompt.
      * @param prompt The text prompt to generate audio from.
      * @param make_instrumental Indicates if the generated audio should be instrumental.
      * @param model
@@ -136,6 +135,7 @@ class SunoApi {
         wait_audio: boolean = false
     ): Promise<AudioInfo[]> {
         await this.keepAlive(false);
+
         const startTime = Date.now();
         const audios = this.generateSongs(
             prompt,
@@ -152,8 +152,7 @@ class SunoApi {
         return audios;
     }
 
-    /**
-     * Calls the concatenate endpoint for a clip to generate the whole song.
+    /** Calls the concatenate endpoint for a clip to generate the whole song.
      * @param clip_id The ID of the audio clip to concatenate.
      * @returns A promise that resolves to an AudioInfo object representing the concatenated audio.
      * @throws Error if the response status is not 200.
@@ -175,9 +174,7 @@ class SunoApi {
         return response.data;
     }
 
-    /**
-     * Generates custom audio based on provided parameters.
-     *
+    /** Generates custom audio based on provided parameters.
      * @param prompt The text prompt to generate audio from.
      * @param tags Tags to categorize the generated audio.
      * @param title The title for the generated audio.
@@ -215,9 +212,7 @@ class SunoApi {
         return audios;
     }
 
-    /**
-     * Generates songs based on the provided parameters.
-     *
+    /** Generates songs based on the provided parameters.
      * @param prompt The text prompt to generate songs from.
      * @param isCustom Indicates if the generation should consider custom parameters like tags and title.
      * @param tags Optional tags to categorize the song, used only if isCustom is true.
@@ -324,8 +319,7 @@ class SunoApi {
         }
     }
 
-    /**
-     * Generates lyrics based on a given prompt.
+    /** Generates lyrics based on a given prompt.
      * @param prompt The prompt for generating lyrics.
      * @returns The generated lyrics text.
      */
@@ -359,9 +353,7 @@ class SunoApi {
         return lyricsResponse.data;
     }
 
-    /**
-     * Extends an existing audio clip by generating additional content based on the provided prompt.
-     *
+    /** Extends an existing audio clip by generating additional content based on the provided prompt.
      * @param audioId The ID of the audio clip to extend.
      * @param prompt The prompt for generating additional content.
      * @param continueAt Extend a new clip from a song at mm:ss(e.g. 00:30). Default extends from the end of the song.
@@ -393,8 +385,7 @@ class SunoApi {
         return response.data;
     }
 
-    /**
-     * Processes the lyrics (prompt) from the audio metadata into a more readable format.
+    /** Processes the lyrics (prompt) from the audio metadata into a more readable format.
      * @param prompt The original lyrics text.
      * @returns The processed lyrics text.
      */
@@ -413,56 +404,29 @@ class SunoApi {
     }
 
 
-    /**
-     * Retrieves audio information for the given song IDs.
-     * @param songIds An optional array of song IDs to retrieve information for.
+    /** Retrieves audio information from the user library.
      * @param page An optional page number to retrieve audio information from.
      * @returns A promise that resolves to an array of AudioInfo objects.
      */
     public async getV2(
-        songIds?: string[],
         page?: string | null
-    ): Promise<AudioInfo[]> {
+    ): Promise<AudioIndex> {
         await this.keepAlive(false);
 
-        // clips
-        // num_total_results
-
-//         curl 'https://studio-api.prod.suno.com/api/feed/v2?page=2' \
-// -X 'GET' \
-// -H 'Pragma: no-cache' \
-// -H 'Accept: */*' \
-// -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yT1o2eU1EZzhscWRKRWloMXJvemY4T3ptZG4iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJzdW5vLWFwaSIsImF6cCI6Imh0dHBzOi8vc3Vuby5jb20iLCJleHAiOjE3MzIyMjkwNzMsImZ2YSI6Wy0xLC0xXSwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9jbGVya19pZCI6InVzZXJfMmdQWmRuTHBBTFdPVng0enZKTkJ0UXptWWV5IiwiaHR0cHM6Ly9zdW5vLmFpL2NsYWltcy9lbWFpbCI6ImVib3lrb0BnbGVuZmxvdy5jb20iLCJodHRwczovL3N1bm8uYWkvY2xhaW1zL3Bob25lIjpudWxsLCJpYXQiOjE3MzIyMjkwMTMsImlzcyI6Imh0dHBzOi8vY2xlcmsuc3Vuby5jb20iLCJqdGkiOiI3YTg1YzExZWFmNzQwN2IyMDZlYyIsIm5iZiI6MTczMjIyOTAwMywic2lkIjoic2Vzc18ybmN4dnBwVGV4TE1xNkQ4VlBQR1RPZGlrY1QiLCJzdWIiOiJ1c2VyXzJnUFpkbkxwQUxXT1Z4NHp2Sk5CdFF6bVlleSJ9.aKuvX6_T8YTsai26ur4CN0aeMaScp-kCYrfW3vbDoSwI2rgPssP91WvFyQx9Q9lUf7SdV_uAG1mqeYhUBYv0svCf9EOhZQLJq7xCqba4CDOSJVVqIJRvt36-I3z6Vkbx-AxPPv2h8oNM9ABEiTz2eliqWzB2C1jWbBsU1-Q_uAsuq_MCbPHno5GNH_EU0-PZpFITmXjQ8HJV-8OifD6kJkqjao82CTxjwE7QQhOJmQZA51onet425ts2YAOtIE0tL3wJIQ27Uk3Er18LF15jkPW0QkxetYHCWP6vgllvqZqLRuRReDYKR13W7xg-n8zlQuzE7Gj0b5_QNcYe4J-HHQ' \
-// -H 'Sec-Fetch-Site: same-site' \
-// -H 'Accept-Language: en-GB,en;q=0.9' \
-// -H 'Cache-Control: no-cache' \
-// -H 'Sec-Fetch-Mode: cors' \
-// -H 'Accept-Encoding: gzip, deflate, br' \
-// -H 'Origin: https://suno.com' \
-// -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0.1 Safari/605.1.15' \
-// -H 'Referer: https://suno.com/' \
-// -H 'Sec-Fetch-Dest: empty' \
-// -H 'Device-Id: "f8bccf7d-72aa-4bd2-b495-bfe84c05a2d7"' \
-// -H 'Priority: u=3, i' \
-// -H 'Affiliate-Id: undefined'
-
-
-        let url = new URL(`${SunoApi.BASE_URL}/api/feed/`);
-        if (songIds) {
-            url.searchParams.append('ids', songIds.join(','));
-        }
+        let url = new URL(`${SunoApi.BASE_URL}/api/feed/v2`);
         if (page) {
             url.searchParams.append('page', page);
         }
+
         console.info('Get audio status: ' + url.href);
         const response = await this.client.get(url.href, {
             // 3 seconds timeout
             timeout: 3000
         });
 
-        const audios = response.data;
+        const data = response.data;
 
-        return audios.map((audio: any) => ({
+        const clips = data.clips.map((audio: any) => ({
             id: audio.id,
             title: audio.title,
             image_url: audio.image_url,
@@ -481,11 +445,15 @@ class SunoApi {
             duration: audio.metadata.duration,
             error_message: audio.metadata.error_message
         }));
+
+        return {
+            clips,
+            total: data.num_total_results
+        }
     }
 
 
-    /**
-     * Retrieves audio information for the given song IDs.
+    /** Retrieves audio information for the given song IDs.
      * @param songIds An optional array of song IDs to retrieve information for.
      * @param page An optional page number to retrieve audio information from.
      * @returns A promise that resolves to an array of AudioInfo objects.
@@ -532,8 +500,7 @@ class SunoApi {
         }));
     }
 
-    /**
-     * Retrieves information for a specific audio clip.
+    /** Retrieves information for a specific audio clip.
      * @param clipId The ID of the audio clip to retrieve information for.
      * @returns A promise that resolves to an object containing the audio clip information.
      */
@@ -547,8 +514,9 @@ class SunoApi {
 
     public async removeClip(clipId: string): Promise<void> {
         await this.keepAlive(false);
-        const response = await this.client.get(
-            `${SunoApi.BASE_URL}/api/clip/${clipId}`
+        const response = await this.client.post(
+            `${SunoApi.BASE_URL}/api/clip/${clipId}`,
+
         );
         return response.data;
 
