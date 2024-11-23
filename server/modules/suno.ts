@@ -35,7 +35,7 @@ export interface AudioInfo {
     created_at: string; // Date and time when the audio was created
     model_name: string; // Name of the model used for audio generation
     gpt_description_prompt?: string; // Prompt for GPT description
-    concat_history: ConcatPart[];
+    concat_history?: ConcatPart[];
     prompt?: string; // Prompt for audio generation
     status: string; // Status
     type?: string;
@@ -44,6 +44,7 @@ export interface AudioInfo {
     duration?: string; // Duration of the audio
     error_message?: string; // Error message if any
     is_trashed: boolean;
+    is_public: boolean;
 }
 
 class SunoApi {
@@ -459,7 +460,7 @@ class SunoApi {
             duration: audio.metadata.duration,
             error_message: audio.metadata.error_message,
             is_trashed: audio.is_trashed,
-
+            is_public: audio.is_public,
             concat_history: audio.metadata.concat_history,
             has_vocal: audio.metadata.has_vocal,
         }));

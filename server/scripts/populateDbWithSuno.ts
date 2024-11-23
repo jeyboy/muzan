@@ -47,49 +47,47 @@ class SunoExporter {
                 Audios.updateOne(
                     {serviceInnerId: clip.id},
                     {
-
+                        //     public parentInnerId?: string; ?
+                        //     public serviceInnerId?: string; +
+                        //     public serviceUrl?: string; ?
+                        //     public serviceAudioUrl?: string; +
+                        //     public coverImageUrl?: string; +
+                        //     public songId: string; -
+                        //     public sourceId: string; +
+                        //     public name: string; +
+                        //     public lang: number; -
+                        //     public playedCount: number; +
+                        //     public likedCount: number; +
+                        //     public styles: string; +
+                        //     public isPublic: boolean; +
+                        //     public isCompleted: boolean; -
                     },
                     { upsert: true }
                 )
-
-                // export class Audio extends Timeable implements Document {
-                //     public _id?: string;
-                //     public parentInnerId?: string; ?
-                //     public serviceInnerId?: string; +
-                //     public serviceUrl?: string; ?
-                //     public serviceAudioUrl?: string; +
-                //     public coverImageUrl?: string; +
-                //     public songId: string; -
-                //     public sourceId: string; +
-                //     public name: string; +
-                //     public lang: number; -
-                //     public playedCount: number; +
-                //     public likedCount: number; +
-                //     public styles: string; +
-                //     public isPublic: boolean; +
-                //     public isCompleted: boolean; -
-
             })
 
 
-            // export interface AudioInfo {
-            //     id: string; // Unique identifier for the audio
-            //     title?: string; // Title of the audio
-            //     image_url?: string; // URL of the image associated with the audio
-            //     lyric?: string; // Lyrics of the audio
-            //     audio_url?: string; // URL of the audio file
-            //     video_url?: string; // URL of the video associated with the audio
-            //     created_at: string; // Date and time when the audio was created
-            //     model_name: string; // Name of the model used for audio generation
-            //     gpt_description_prompt?: string; // Prompt for GPT description
-            //     prompt?: string; // Prompt for audio generation
-            //     status: string; // Status
-            //     type?: string;
-            //     tags?: string; // Genre of music.
-            //     negative_tags?: string; // Negative tags of music.
-            //     duration?: string; // Duration of the audio
-            //     error_message?: string; // Error message if any
-            // }
+            // id: audio.id,
+            //     title: audio.title,
+            //     image_url: audio.image_url,
+            //     lyric: audio.metadata.prompt
+            //     ? this.parseLyrics(audio.metadata.prompt)
+            //     : '',
+            //     audio_url: audio.audio_url,
+            //     video_url: audio.video_url,
+            //     created_at: audio.created_at,
+            //     model_name: audio.model_name,
+            //     status: audio.status,
+            //     gpt_description_prompt: audio.metadata.gpt_description_prompt,
+            //     prompt: audio.metadata.prompt,
+            //     type: audio.metadata.type,
+            //     tags: audio.metadata.tags,
+            //     duration: audio.metadata.duration,
+            //     error_message: audio.metadata.error_message,
+            //     is_trashed: audio.is_trashed,
+            //     is_public: audio.is_public,
+            //     concat_history: audio.metadata.concat_history,
+            //     has_vocal: audio.metadata.has_vocal,
 
 
             recordsProcessed += res.clips.length;

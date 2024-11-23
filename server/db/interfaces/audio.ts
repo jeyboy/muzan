@@ -31,6 +31,7 @@ export class Audio extends Timeable implements Document {
     public isPublic: boolean;
     public isCompleted: boolean;
     public prompt?: string;
+    public concatStory: string[];
 
     constructor(data: (Partial<Audio> & { name: string, songId: string, sourceId: string, servicePresetLevel: number })) {
         super(data);
@@ -53,5 +54,6 @@ export class Audio extends Timeable implements Document {
         this.isCompleted = data.isCompleted || false;
         this.servicePresetLevel = data.servicePresetLevel;
         this.prompt = data.prompt;
+        this.concatStory = data.concatStory || [];
     }
 }
