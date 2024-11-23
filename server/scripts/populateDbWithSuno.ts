@@ -47,20 +47,21 @@ class SunoExporter {
                 Audios.updateOne(
                     {serviceInnerId: clip.id},
                     {
-                        //     public parentInnerId?: string; ?
-                        //     public serviceInnerId?: string; +
-                        //     public serviceUrl?: string; ?
-                        //     public serviceAudioUrl?: string; +
-                        //     public coverImageUrl?: string; +
-                        //     public songId: string; -
-                        //     public sourceId: string; +
-                        //     public name: string; +
-                        //     public lang: number; -
-                        //     public playedCount: number; +
+                        parentInnerId: clip.concat_history?[0],
+                        serviceInnerId: clip.id,
+                        serviceUrl: `https://suno.com/song/#{clip.id}`,
+                        serviceAudioUrl: clip.audio_url,
+                        coverImageUrl: clip.image_large_url,
+                        songId: '', // placeholder
+                        sourceId: sunoAccount._id,
+                        name: clip.title,
+                        // lang: ,
+                        playedCount: clip.,
                         //     public likedCount: number; +
                         //     public styles: string; +
                         //     public isPublic: boolean; +
                         //     public isCompleted: boolean; -
+                        createdAt: clip.created_at,
                     },
                     { upsert: true }
                 )
