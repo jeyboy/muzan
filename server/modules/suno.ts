@@ -15,16 +15,27 @@ export interface AudioIndex {
     total: number;
 }
 
+export interface ConcatPart {
+    id: string;
+    type?: string; // upload // gen
+    infill?: boolean;
+    source?: string; // web
+    continue_at?: number; // 30.40000002
+}
+
 export interface AudioInfo {
     id: string; // Unique identifier for the audio
     title?: string; // Title of the audio
     image_url?: string; // URL of the image associated with the audio
+    image_large_url?: string; // URL of the image associated with the audio
+    has_vocal?: boolean; // track is containing vocal parts
     lyric?: string; // Lyrics of the audio
     audio_url?: string; // URL of the audio file
     video_url?: string; // URL of the video associated with the audio
     created_at: string; // Date and time when the audio was created
     model_name: string; // Name of the model used for audio generation
     gpt_description_prompt?: string; // Prompt for GPT description
+    concat_history: ConcatPart[];
     prompt?: string; // Prompt for audio generation
     status: string; // Status
     type?: string;
@@ -32,6 +43,7 @@ export interface AudioInfo {
     negative_tags?: string; // Negative tags of music.
     duration?: string; // Duration of the audio
     error_message?: string; // Error message if any
+    is_trashed: boolean;
 }
 
 class SunoApi {
@@ -445,7 +457,11 @@ class SunoApi {
             type: audio.metadata.type,
             tags: audio.metadata.tags,
             duration: audio.metadata.duration,
-            error_message: audio.metadata.error_message
+            error_message: audio.metadata.error_message,
+            is_trashed: audio.is_trashed,
+
+            concat_history: audio.metadata.concat_history,
+            has_vocal: audio.metadata.has_vocal,
         }));
 
         return {
@@ -485,6 +501,7 @@ class SunoApi {
             id: audio.id,
             title: audio.title,
             image_url: audio.image_url,
+            image_large_url: audio.image_large_url,
             lyric: audio.metadata.prompt
                 ? this.parseLyrics(audio.metadata.prompt)
                 : '',

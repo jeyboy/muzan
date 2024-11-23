@@ -1,5 +1,5 @@
 import {Source} from "../db/interfaces/source.ts";
-import {Services, Sources} from "../db/connection.ts";
+import {Audios, Services, Sources} from "../db/connection.ts";
 import {AvailableServices} from "../db/interfaces/service.ts";
 import {type AudioIndex, newSunoApi} from "../modules/suno.ts";
 import {Timeable} from "../db/interfaces/_timeable.ts";
@@ -32,7 +32,7 @@ class SunoExporter {
         const sunoApi = await newSunoApi(sunoAccount.cookies);
         let isBlocked = false;
         let res: AudioIndex;
-        let page = 1;
+        let page = 0;
         let attempts = 0;
         let recordsProcessed = 0;
         const attemptsLimit = 10;
@@ -44,12 +44,13 @@ class SunoExporter {
             attempts = 0;
 
             res.clips.forEach((clip) => {
+                Audios.updateOne(
+                    {serviceInnerId: clip.id},
+                    {
 
-                // export class Lyric implements Document {
-                //     public _id?: string;
-                //     public songId: string;
-                //     public text: string;
-                //     public lang: number;
+                    },
+                    { upsert: true }
+                )
 
                 // export class Audio extends Timeable implements Document {
                 //     public _id?: string;
@@ -69,6 +70,27 @@ class SunoExporter {
                 //     public isCompleted: boolean; -
 
             })
+
+
+            // export interface AudioInfo {
+            //     id: string; // Unique identifier for the audio
+            //     title?: string; // Title of the audio
+            //     image_url?: string; // URL of the image associated with the audio
+            //     lyric?: string; // Lyrics of the audio
+            //     audio_url?: string; // URL of the audio file
+            //     video_url?: string; // URL of the video associated with the audio
+            //     created_at: string; // Date and time when the audio was created
+            //     model_name: string; // Name of the model used for audio generation
+            //     gpt_description_prompt?: string; // Prompt for GPT description
+            //     prompt?: string; // Prompt for audio generation
+            //     status: string; // Status
+            //     type?: string;
+            //     tags?: string; // Genre of music.
+            //     negative_tags?: string; // Negative tags of music.
+            //     duration?: string; // Duration of the audio
+            //     error_message?: string; // Error message if any
+            // }
+
 
             recordsProcessed += res.clips.length;
             isBlocked = recordsProcessed >= res.total;
